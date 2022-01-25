@@ -46,6 +46,12 @@ export type Debug = {
   database: Scalars["String"];
 };
 
+export type Destination = {
+  __typename?: "Destination";
+  account: Account;
+  connection: Connection;
+};
+
 export type Filter = {
   id: Scalars["ID"];
   kind: Scalars["String"];
@@ -87,6 +93,7 @@ export type NumberFilter = Filter & {
 
 export type Pipe = {
   __typename?: "Pipe";
+  destinations: Array<Destination>;
   flags: Flags;
   name: Scalars["String"];
   sources: Array<Source>;
@@ -251,6 +258,7 @@ export type ResolversTypes = ResolversObject<{
   Connection: ResolverTypeWrapper<DeepPartial<Connection>>;
   CreateTodoInput: ResolverTypeWrapper<DeepPartial<CreateTodoInput>>;
   Debug: ResolverTypeWrapper<DeepPartial<Debug>>;
+  Destination: ResolverTypeWrapper<DeepPartial<Destination>>;
   Filter: ResolversTypes["NumberFilter"] | ResolversTypes["StringFilter"];
   Flags: ResolverTypeWrapper<DeepPartial<Flags>>;
   ID: ResolverTypeWrapper<DeepPartial<Scalars["ID"]>>;
@@ -274,6 +282,7 @@ export type ResolversParentTypes = ResolversObject<{
   Connection: DeepPartial<Connection>;
   CreateTodoInput: DeepPartial<CreateTodoInput>;
   Debug: DeepPartial<Debug>;
+  Destination: DeepPartial<Destination>;
   Filter:
     | ResolversParentTypes["NumberFilter"]
     | ResolversParentTypes["StringFilter"];
@@ -315,6 +324,15 @@ export type DebugResolvers<
   ParentType extends ResolversParentTypes["Debug"] = ResolversParentTypes["Debug"]
 > = ResolversObject<{
   database?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type DestinationResolvers<
+  ContextType = Context,
+  ParentType extends ResolversParentTypes["Destination"] = ResolversParentTypes["Destination"]
+> = ResolversObject<{
+  account?: Resolver<ResolversTypes["Account"], ParentType, ContextType>;
+  connection?: Resolver<ResolversTypes["Connection"], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -379,6 +397,11 @@ export type PipeResolvers<
   ContextType = Context,
   ParentType extends ResolversParentTypes["Pipe"] = ResolversParentTypes["Pipe"]
 > = ResolversObject<{
+  destinations?: Resolver<
+    Array<ResolversTypes["Destination"]>,
+    ParentType,
+    ContextType
+  >;
   flags?: Resolver<ResolversTypes["Flags"], ParentType, ContextType>;
   name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   sources?: Resolver<Array<ResolversTypes["Source"]>, ParentType, ContextType>;
@@ -451,6 +474,7 @@ export type Resolvers<ContextType = Context> = ResolversObject<{
   Account?: AccountResolvers<ContextType>;
   Connection?: ConnectionResolvers<ContextType>;
   Debug?: DebugResolvers<ContextType>;
+  Destination?: DestinationResolvers<ContextType>;
   Filter?: FilterResolvers<ContextType>;
   Flags?: FlagsResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;

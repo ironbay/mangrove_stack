@@ -6,12 +6,18 @@ type Pipe {
   name: String!
   flags: Flags!
   sources: [Source!]!
+  destinations: [Destination!]!
 }
 
 type Source {
   connection: Connection!
   account: Account!
   filters: [Filter!]!
+}
+
+type Destination {
+  connection: Connection!
+  account: Account!
 }
 
 type Connection {

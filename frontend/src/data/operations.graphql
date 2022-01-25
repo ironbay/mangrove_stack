@@ -32,6 +32,16 @@ query Pipe {
         }
       }
     }
+    destinations {
+      connection {
+        id
+        name
+      }
+      account {
+        id
+        name
+      }
+    }
   }
 }
 

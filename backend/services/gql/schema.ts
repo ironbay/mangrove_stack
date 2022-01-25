@@ -19,6 +19,10 @@ export const typeDefs = gql`
   type Debug {
     database: String!
   }
+  type Destination {
+    account: Account!
+    connection: Connection!
+  }
   interface Filter {
     id: ID!
     kind: String!
@@ -39,6 +43,7 @@ export const typeDefs = gql`
     op: String!
   }
   type Pipe {
+    destinations: [Destination!]!
     flags: Flags!
     name: String!
     sources: [Source!]!

@@ -43,6 +43,12 @@ export type Debug = {
   database: Scalars["String"];
 };
 
+export type Destination = {
+  __typename?: "Destination";
+  account: Account;
+  connection: Connection;
+};
+
 export type Filter = {
   id: Scalars["ID"];
   kind: Scalars["String"];
@@ -84,6 +90,7 @@ export type NumberFilter = Filter & {
 
 export type Pipe = {
   __typename?: "Pipe";
+  destinations: Array<Destination>;
   flags: Flags;
   name: Scalars["String"];
   sources: Array<Source>;
@@ -173,6 +180,11 @@ export type PipeQuery = {
           }
       >;
     }>;
+    destinations: Array<{
+      __typename?: "Destination";
+      connection: { __typename?: "Connection"; id: string; name: string };
+      account: { __typename?: "Account"; id: string; name: string };
+    }>;
   };
 };
 
@@ -245,6 +257,16 @@ export const PipeDocument = gql`
           ... on StringFilter {
             word
           }
+        }
+      }
+      destinations {
+        connection {
+          id
+          name
+        }
+        account {
+          id
+          name
         }
       }
     }
