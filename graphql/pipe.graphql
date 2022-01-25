@@ -1,0 +1,37 @@
+type Query {
+  pipe: Pipe!
+}
+
+type Pipe {
+  name: String!
+  flags: Flags!
+  sources: [Source!]!
+}
+
+type Source {
+  filters: [Filter!]!
+}
+
+interface Filter {
+  id: ID!
+  kind: String!
+  op: String!
+}
+
+type NumberFilter implements Filter {
+  id: ID!
+  kind: String!
+  op: String!
+  int: Int!
+}
+
+type StringFilter implements Filter {
+  id: ID!
+  kind: String!
+  op: String!
+  word: String!
+}
+
+type Flags {
+  enabled: Boolean!
+}

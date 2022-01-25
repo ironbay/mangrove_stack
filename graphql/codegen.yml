@@ -1,0 +1,35 @@
+overwrite: true
+schema:
+  - graphql/*.graphql
+
+generates:
+  backend/services/gql/resolvers/types.ts:
+    config:
+      useIndexSignature: true
+      makeResolverTypeCallable: true
+      contextType: "@acme/core#Context"
+      defaultMapper: DeepPartial<{T}>
+    plugins:
+      - typescript
+      - typescript-resolvers
+      - add:
+          content: "import { DeepPartial } from 'utility-types';"
+
+  backend/services/gql/schema.ts:
+    plugins:
+      - backend/codegen-typedef.cjs
+
+  frontend/src/data/urql.ts:
+    documents:
+      - frontend/src/data/operations.graphql
+    config:
+      withHooks: true
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-urql
+
+
+hooks:
+  afterOneFileWrite:
+    - prettier --write
