@@ -12,6 +12,14 @@ query Todos {
 query Pipe {
   pipe {
     sources {
+      connection {
+        id
+        name
+      }
+      account {
+        id
+        name
+      }
       filters {
         id
         kind

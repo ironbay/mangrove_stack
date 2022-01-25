@@ -4,6 +4,14 @@ export const typeDefs = gql`
     query: Query
     mutation: Mutation
   }
+  type Account {
+    id: ID!
+    name: String!
+  }
+  type Connection {
+    id: ID!
+    name: String!
+  }
   input CreateTodoInput {
     id: String!
     title: String!
@@ -45,6 +53,8 @@ export const typeDefs = gql`
     currentUser: User!
   }
   type Source {
+    account: Account!
+    connection: Connection!
     filters: [Filter!]!
   }
   type StringFilter implements Filter {

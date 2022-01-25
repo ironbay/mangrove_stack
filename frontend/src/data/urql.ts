@@ -21,6 +21,18 @@ export type Scalars = {
   Float: number;
 };
 
+export type Account = {
+  __typename?: "Account";
+  id: Scalars["ID"];
+  name: Scalars["String"];
+};
+
+export type Connection = {
+  __typename?: "Connection";
+  id: Scalars["ID"];
+  name: Scalars["String"];
+};
+
 export type CreateTodoInput = {
   id: Scalars["String"];
   title: Scalars["String"];
@@ -96,6 +108,8 @@ export type Session = {
 
 export type Source = {
   __typename?: "Source";
+  account: Account;
+  connection: Connection;
   filters: Array<Filter>;
 };
 
@@ -140,6 +154,8 @@ export type PipeQuery = {
     __typename?: "Pipe";
     sources: Array<{
       __typename?: "Source";
+      connection: { __typename?: "Connection"; id: string; name: string };
+      account: { __typename?: "Account"; id: string; name: string };
       filters: Array<
         | {
             __typename?: "NumberFilter";
@@ -211,6 +227,14 @@ export const PipeDocument = gql`
   query Pipe {
     pipe {
       sources {
+        connection {
+          id
+          name
+        }
+        account {
+          id
+          name
+        }
         filters {
           id
           kind

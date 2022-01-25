@@ -9,7 +9,25 @@ type Pipe {
 }
 
 type Source {
+  connection: Connection!
+  account: Account!
   filters: [Filter!]!
+}
+
+type Connection {
+  id: ID!
+  name: String!
+}
+
+type Account {
+  id: ID!
+  name: String!
+}
+
+type Filter {
+  id: ID!
+  kind: String!
+  op: String!
 }
 
 interface Filter {
