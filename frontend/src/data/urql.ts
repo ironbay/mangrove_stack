@@ -96,6 +96,19 @@ export type Pipe = {
   sources: Array<Source>;
 };
 
+export type PlaidAccount = {
+  __typename?: "PlaidAccount";
+  id: Scalars["ID"];
+  kind: Scalars["String"];
+  name: Scalars["String"];
+  subKind: Scalars["String"];
+};
+
+export type PlaidConnection = {
+  __typename?: "PlaidConnection";
+  accounts: Array<PlaidAccount>;
+};
+
 export type Query = {
   __typename?: "Query";
   debug: Debug;
@@ -111,6 +124,26 @@ export type QueryUserArgs = {
 export type Session = {
   __typename?: "Session";
   currentUser: User;
+};
+
+export type SlackChannel = {
+  __typename?: "SlackChannel";
+  count_members: Scalars["Int"];
+  id: Scalars["ID"];
+  name: Scalars["String"];
+  topic: Scalars["String"];
+};
+
+export type SlackConnection = {
+  __typename?: "SlackConnection";
+  channels: Array<SlackChannel>;
+  team: SlackTeam;
+};
+
+export type SlackTeam = {
+  __typename?: "SlackTeam";
+  id: Scalars["ID"];
+  name: Scalars["String"];
 };
 
 export type Source = {
@@ -137,6 +170,8 @@ export type Todo = {
 export type User = {
   __typename?: "User";
   id: Scalars["ID"];
+  plaid_connections: Array<PlaidConnection>;
+  slack_connections: Array<SlackConnection>;
   todos: Array<Todo>;
 };
 

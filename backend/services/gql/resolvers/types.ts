@@ -99,6 +99,19 @@ export type Pipe = {
   sources: Array<Source>;
 };
 
+export type PlaidAccount = {
+  __typename?: "PlaidAccount";
+  id: Scalars["ID"];
+  kind: Scalars["String"];
+  name: Scalars["String"];
+  subKind: Scalars["String"];
+};
+
+export type PlaidConnection = {
+  __typename?: "PlaidConnection";
+  accounts: Array<PlaidAccount>;
+};
+
 export type Query = {
   __typename?: "Query";
   debug: Debug;
@@ -114,6 +127,26 @@ export type QueryUserArgs = {
 export type Session = {
   __typename?: "Session";
   currentUser: User;
+};
+
+export type SlackChannel = {
+  __typename?: "SlackChannel";
+  count_members: Scalars["Int"];
+  id: Scalars["ID"];
+  name: Scalars["String"];
+  topic: Scalars["String"];
+};
+
+export type SlackConnection = {
+  __typename?: "SlackConnection";
+  channels: Array<SlackChannel>;
+  team: SlackTeam;
+};
+
+export type SlackTeam = {
+  __typename?: "SlackTeam";
+  id: Scalars["ID"];
+  name: Scalars["String"];
 };
 
 export type Source = {
@@ -140,6 +173,8 @@ export type Todo = {
 export type User = {
   __typename?: "User";
   id: Scalars["ID"];
+  plaid_connections: Array<PlaidConnection>;
+  slack_connections: Array<SlackConnection>;
   todos: Array<Todo>;
 };
 
@@ -266,8 +301,13 @@ export type ResolversTypes = ResolversObject<{
   Mutation: ResolverTypeWrapper<{}>;
   NumberFilter: ResolverTypeWrapper<DeepPartial<NumberFilter>>;
   Pipe: ResolverTypeWrapper<DeepPartial<Pipe>>;
+  PlaidAccount: ResolverTypeWrapper<DeepPartial<PlaidAccount>>;
+  PlaidConnection: ResolverTypeWrapper<DeepPartial<PlaidConnection>>;
   Query: ResolverTypeWrapper<{}>;
   Session: ResolverTypeWrapper<DeepPartial<Session>>;
+  SlackChannel: ResolverTypeWrapper<DeepPartial<SlackChannel>>;
+  SlackConnection: ResolverTypeWrapper<DeepPartial<SlackConnection>>;
+  SlackTeam: ResolverTypeWrapper<DeepPartial<SlackTeam>>;
   Source: ResolverTypeWrapper<DeepPartial<Source>>;
   String: ResolverTypeWrapper<DeepPartial<Scalars["String"]>>;
   StringFilter: ResolverTypeWrapper<DeepPartial<StringFilter>>;
@@ -292,8 +332,13 @@ export type ResolversParentTypes = ResolversObject<{
   Mutation: {};
   NumberFilter: DeepPartial<NumberFilter>;
   Pipe: DeepPartial<Pipe>;
+  PlaidAccount: DeepPartial<PlaidAccount>;
+  PlaidConnection: DeepPartial<PlaidConnection>;
   Query: {};
   Session: DeepPartial<Session>;
+  SlackChannel: DeepPartial<SlackChannel>;
+  SlackConnection: DeepPartial<SlackConnection>;
+  SlackTeam: DeepPartial<SlackTeam>;
   Source: DeepPartial<Source>;
   String: DeepPartial<Scalars["String"]>;
   StringFilter: DeepPartial<StringFilter>;
@@ -408,6 +453,29 @@ export type PipeResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type PlaidAccountResolvers<
+  ContextType = Context,
+  ParentType extends ResolversParentTypes["PlaidAccount"] = ResolversParentTypes["PlaidAccount"]
+> = ResolversObject<{
+  id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
+  kind?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  subKind?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type PlaidConnectionResolvers<
+  ContextType = Context,
+  ParentType extends ResolversParentTypes["PlaidConnection"] = ResolversParentTypes["PlaidConnection"]
+> = ResolversObject<{
+  accounts?: Resolver<
+    Array<ResolversTypes["PlaidAccount"]>,
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type QueryResolvers<
   ContextType = Context,
   ParentType extends ResolversParentTypes["Query"] = ResolversParentTypes["Query"]
@@ -428,6 +496,39 @@ export type SessionResolvers<
   ParentType extends ResolversParentTypes["Session"] = ResolversParentTypes["Session"]
 > = ResolversObject<{
   currentUser?: Resolver<ResolversTypes["User"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type SlackChannelResolvers<
+  ContextType = Context,
+  ParentType extends ResolversParentTypes["SlackChannel"] = ResolversParentTypes["SlackChannel"]
+> = ResolversObject<{
+  count_members?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  topic?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type SlackConnectionResolvers<
+  ContextType = Context,
+  ParentType extends ResolversParentTypes["SlackConnection"] = ResolversParentTypes["SlackConnection"]
+> = ResolversObject<{
+  channels?: Resolver<
+    Array<ResolversTypes["SlackChannel"]>,
+    ParentType,
+    ContextType
+  >;
+  team?: Resolver<ResolversTypes["SlackTeam"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type SlackTeamResolvers<
+  ContextType = Context,
+  ParentType extends ResolversParentTypes["SlackTeam"] = ResolversParentTypes["SlackTeam"]
+> = ResolversObject<{
+  id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -466,6 +567,16 @@ export type UserResolvers<
   ParentType extends ResolversParentTypes["User"] = ResolversParentTypes["User"]
 > = ResolversObject<{
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
+  plaid_connections?: Resolver<
+    Array<ResolversTypes["PlaidConnection"]>,
+    ParentType,
+    ContextType
+  >;
+  slack_connections?: Resolver<
+    Array<ResolversTypes["SlackConnection"]>,
+    ParentType,
+    ContextType
+  >;
   todos?: Resolver<Array<ResolversTypes["Todo"]>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
@@ -480,8 +591,13 @@ export type Resolvers<ContextType = Context> = ResolversObject<{
   Mutation?: MutationResolvers<ContextType>;
   NumberFilter?: NumberFilterResolvers<ContextType>;
   Pipe?: PipeResolvers<ContextType>;
+  PlaidAccount?: PlaidAccountResolvers<ContextType>;
+  PlaidConnection?: PlaidConnectionResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Session?: SessionResolvers<ContextType>;
+  SlackChannel?: SlackChannelResolvers<ContextType>;
+  SlackConnection?: SlackConnectionResolvers<ContextType>;
+  SlackTeam?: SlackTeamResolvers<ContextType>;
   Source?: SourceResolvers<ContextType>;
   StringFilter?: StringFilterResolvers<ContextType>;
   Todo?: TodoResolvers<ContextType>;

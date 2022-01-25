@@ -48,6 +48,15 @@ export const typeDefs = gql`
     name: String!
     sources: [Source!]!
   }
+  type PlaidAccount {
+    id: ID!
+    kind: String!
+    name: String!
+    subKind: String!
+  }
+  type PlaidConnection {
+    accounts: [PlaidAccount!]!
+  }
   type Query {
     debug: Debug!
     pipe: Pipe!
@@ -56,6 +65,20 @@ export const typeDefs = gql`
   }
   type Session {
     currentUser: User!
+  }
+  type SlackChannel {
+    count_members: Int!
+    id: ID!
+    name: String!
+    topic: String!
+  }
+  type SlackConnection {
+    channels: [SlackChannel!]!
+    team: SlackTeam!
+  }
+  type SlackTeam {
+    id: ID!
+    name: String!
   }
   type Source {
     account: Account!
@@ -74,6 +97,8 @@ export const typeDefs = gql`
   }
   type User {
     id: ID!
+    plaid_connections: [PlaidConnection!]!
+    slack_connections: [SlackConnection!]!
     todos: [Todo!]!
   }
 `;

@@ -1,0 +1,32 @@
+type User {
+  plaid_connections: [PlaidConnection!]!
+  slack_connections: [SlackConnection!]!
+}
+
+type PlaidConnection {
+  accounts: [PlaidAccount!]!
+}
+
+type PlaidAccount {
+  id: ID!
+  name: String!
+  kind: String!
+  subKind: String!
+}
+
+type SlackConnection {
+  team: SlackTeam!
+  channels: [SlackChannel!]!
+}
+
+type SlackTeam {
+  id: ID!
+  name: String!
+}
+
+type SlackChannel {
+  id: ID!
+  name: String!
+  topic: String!
+  count_members: Int!
+}
