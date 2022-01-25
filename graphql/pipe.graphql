@@ -10,30 +10,17 @@ type Pipe {
 }
 
 type Source {
-  connection: Connection!
-  account: Account!
+  account: SourceAccount!
   filters: [Filter!]!
 }
 
-type Destination {
-  connection: Connection!
-  account: Account!
-}
+union SourceAccount = PlaidAccount
 
-type Connection {
-  id: ID!
-  name: String!
-}
+union Destination = SlackDestination
 
-type Account {
-  id: ID!
-  name: String!
-}
-
-type Filter {
-  id: ID!
-  kind: String!
-  op: String!
+type SlackDestination {
+  team: SlackTeam!
+  channel: SlackChannel!
 }
 
 interface Filter {

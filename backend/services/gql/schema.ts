@@ -4,14 +4,6 @@ export const typeDefs = gql`
     query: Query
     mutation: Mutation
   }
-  type Account {
-    id: ID!
-    name: String!
-  }
-  type Connection {
-    id: ID!
-    name: String!
-  }
   input CreateTodoInput {
     id: String!
     title: String!
@@ -19,10 +11,7 @@ export const typeDefs = gql`
   type Debug {
     database: String!
   }
-  type Destination {
-    account: Account!
-    connection: Connection!
-  }
+  union Destination = SlackDestination
   interface Filter {
     id: ID!
     kind: String!
@@ -76,15 +65,19 @@ export const typeDefs = gql`
     channels: [SlackChannel!]!
     team: SlackTeam!
   }
+  type SlackDestination {
+    channel: SlackChannel!
+    team: SlackTeam!
+  }
   type SlackTeam {
     id: ID!
     name: String!
   }
   type Source {
-    account: Account!
-    connection: Connection!
+    account: SourceAccount!
     filters: [Filter!]!
   }
+  union SourceAccount = PlaidAccount
   type StringFilter implements Filter {
     id: ID!
     kind: String!

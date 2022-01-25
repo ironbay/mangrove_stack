@@ -21,18 +21,6 @@ export type Scalars = {
   Float: number;
 };
 
-export type Account = {
-  __typename?: "Account";
-  id: Scalars["ID"];
-  name: Scalars["String"];
-};
-
-export type Connection = {
-  __typename?: "Connection";
-  id: Scalars["ID"];
-  name: Scalars["String"];
-};
-
 export type CreateTodoInput = {
   id: Scalars["String"];
   title: Scalars["String"];
@@ -43,11 +31,7 @@ export type Debug = {
   database: Scalars["String"];
 };
 
-export type Destination = {
-  __typename?: "Destination";
-  account: Account;
-  connection: Connection;
-};
+export type Destination = SlackDestination;
 
 export type Filter = {
   id: Scalars["ID"];
@@ -140,6 +124,12 @@ export type SlackConnection = {
   team: SlackTeam;
 };
 
+export type SlackDestination = {
+  __typename?: "SlackDestination";
+  channel: SlackChannel;
+  team: SlackTeam;
+};
+
 export type SlackTeam = {
   __typename?: "SlackTeam";
   id: Scalars["ID"];
@@ -148,10 +138,11 @@ export type SlackTeam = {
 
 export type Source = {
   __typename?: "Source";
-  account: Account;
-  connection: Connection;
+  account: SourceAccount;
   filters: Array<Filter>;
 };
+
+export type SourceAccount = PlaidAccount;
 
 export type StringFilter = Filter & {
   __typename?: "StringFilter";
@@ -196,8 +187,7 @@ export type PipeQuery = {
     __typename?: "Pipe";
     sources: Array<{
       __typename?: "Source";
-      connection: { __typename?: "Connection"; id: string; name: string };
-      account: { __typename?: "Account"; id: string; name: string };
+      account: { __typename?: "PlaidAccount"; id: string; name: string };
       filters: Array<
         | {
             __typename?: "NumberFilter";
@@ -216,9 +206,9 @@ export type PipeQuery = {
       >;
     }>;
     destinations: Array<{
-      __typename?: "Destination";
-      connection: { __typename?: "Connection"; id: string; name: string };
-      account: { __typename?: "Account"; id: string; name: string };
+      __typename?: "SlackDestination";
+      channel: { __typename?: "SlackChannel"; id: string; name: string };
+      team: { __typename?: "SlackTeam"; id: string; name: string };
     }>;
   };
 };
@@ -274,13 +264,11 @@ export const PipeDocument = gql`
   query Pipe {
     pipe {
       sources {
-        connection {
-          id
-          name
-        }
         account {
-          id
-          name
+          ... on PlaidAccount {
+            id
+            name
+          }
         }
         filters {
           id
@@ -295,13 +283,15 @@ export const PipeDocument = gql`
         }
       }
       destinations {
-        connection {
-          id
-          name
-        }
-        account {
-          id
-          name
+        ... on SlackDestination {
+          channel {
+            id
+            name
+          }
+          team {
+            id
+            name
+          }
         }
       }
     }
