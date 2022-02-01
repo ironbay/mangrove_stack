@@ -14,7 +14,7 @@ type Pipe {
   destinations: [Destination!]!
 }
 
-type CreatePipeInput {
+input CreatePipeInput {
   id: ID!
   name: String!
   flags: Flags!
@@ -23,7 +23,7 @@ type CreatePipeInput {
 }
 
 type Mutation {
-  createPipe(input: String!): Pipe!
+  createPipe(input: CreatePipeInput!): Pipe!
   removePipe(input: ID!): Pipe!
 }
 
