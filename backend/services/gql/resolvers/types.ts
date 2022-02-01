@@ -40,6 +40,15 @@ export type BitcoinConnection = {
   logo: Scalars["String"];
 };
 
+export type CreatePipeInput = {
+  __typename?: "CreatePipeInput";
+  destinations: Array<Destination>;
+  flags: Flags;
+  id: Scalars["ID"];
+  name: Scalars["String"];
+  sources: Array<Source>;
+};
+
 export type CreateTodoInput = {
   id: Scalars["String"];
   title: Scalars["String"];
@@ -61,13 +70,23 @@ export type Flags = {
 
 export type Mutation = {
   __typename?: "Mutation";
+  createPipe: Pipe;
   createTodo: Todo;
+  removePipe: Pipe;
   removeTodo?: Maybe<Todo>;
   upload: Scalars["String"];
 };
 
+export type MutationCreatePipeArgs = {
+  input: Scalars["String"];
+};
+
 export type MutationCreateTodoArgs = {
   input: CreateTodoInput;
+};
+
+export type MutationRemovePipeArgs = {
+  input: Scalars["ID"];
 };
 
 export type MutationRemoveTodoArgs = {
@@ -120,6 +139,10 @@ export type Query = {
   user: User;
 };
 
+export type QueryPipeArgs = {
+  id: Scalars["ID"];
+};
+
 export type QueryUserArgs = {
   id: Scalars["ID"];
 };
@@ -155,6 +178,7 @@ export type SlackDestination = {
 export type SlackTeam = {
   __typename?: "SlackTeam";
   id: Scalars["ID"];
+  logo: Scalars["String"];
   name: Scalars["String"];
 };
 
@@ -323,6 +347,13 @@ export type ResolversTypes = ResolversObject<{
   BitcoinAccount: ResolverTypeWrapper<DeepPartial<BitcoinAccount>>;
   BitcoinConnection: ResolverTypeWrapper<DeepPartial<BitcoinConnection>>;
   Boolean: ResolverTypeWrapper<DeepPartial<Scalars["Boolean"]>>;
+  CreatePipeInput: ResolverTypeWrapper<
+    DeepPartial<
+      Omit<CreatePipeInput, "destinations"> & {
+        destinations: Array<ResolversTypes["Destination"]>;
+      }
+    >
+  >;
   CreateTodoInput: ResolverTypeWrapper<DeepPartial<CreateTodoInput>>;
   Debug: ResolverTypeWrapper<DeepPartial<Debug>>;
   Destination: DeepPartial<
@@ -377,6 +408,11 @@ export type ResolversParentTypes = ResolversObject<{
   BitcoinAccount: DeepPartial<BitcoinAccount>;
   BitcoinConnection: DeepPartial<BitcoinConnection>;
   Boolean: DeepPartial<Scalars["Boolean"]>;
+  CreatePipeInput: DeepPartial<
+    Omit<CreatePipeInput, "destinations"> & {
+      destinations: Array<ResolversParentTypes["Destination"]>;
+    }
+  >;
   CreateTodoInput: DeepPartial<CreateTodoInput>;
   Debug: DeepPartial<Debug>;
   Destination: DeepPartial<
@@ -453,6 +489,22 @@ export type BitcoinConnectionResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type CreatePipeInputResolvers<
+  ContextType = Context,
+  ParentType extends ResolversParentTypes["CreatePipeInput"] = ResolversParentTypes["CreatePipeInput"]
+> = ResolversObject<{
+  destinations?: Resolver<
+    Array<ResolversTypes["Destination"]>,
+    ParentType,
+    ContextType
+  >;
+  flags?: Resolver<ResolversTypes["Flags"], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  sources?: Resolver<Array<ResolversTypes["Source"]>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type DebugResolvers<
   ContextType = Context,
   ParentType extends ResolversParentTypes["Debug"] = ResolversParentTypes["Debug"]
@@ -495,11 +547,23 @@ export type MutationResolvers<
   ContextType = Context,
   ParentType extends ResolversParentTypes["Mutation"] = ResolversParentTypes["Mutation"]
 > = ResolversObject<{
+  createPipe?: Resolver<
+    ResolversTypes["Pipe"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationCreatePipeArgs, "input">
+  >;
   createTodo?: Resolver<
     ResolversTypes["Todo"],
     ParentType,
     ContextType,
     RequireFields<MutationCreateTodoArgs, "input">
+  >;
+  removePipe?: Resolver<
+    ResolversTypes["Pipe"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationRemovePipeArgs, "input">
   >;
   removeTodo?: Resolver<
     Maybe<ResolversTypes["Todo"]>,
@@ -577,7 +641,12 @@ export type QueryResolvers<
   ParentType extends ResolversParentTypes["Query"] = ResolversParentTypes["Query"]
 > = ResolversObject<{
   debug?: Resolver<ResolversTypes["Debug"], ParentType, ContextType>;
-  pipe?: Resolver<ResolversTypes["Pipe"], ParentType, ContextType>;
+  pipe?: Resolver<
+    ResolversTypes["Pipe"],
+    ParentType,
+    ContextType,
+    RequireFields<QueryPipeArgs, "id">
+  >;
   session?: Resolver<ResolversTypes["Session"], ParentType, ContextType>;
   user?: Resolver<
     ResolversTypes["User"],
@@ -640,6 +709,7 @@ export type SlackTeamResolvers<
   ParentType extends ResolversParentTypes["SlackTeam"] = ResolversParentTypes["SlackTeam"]
 > = ResolversObject<{
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
+  logo?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
@@ -734,6 +804,7 @@ export type Resolvers<ContextType = Context> = ResolversObject<{
   Account?: AccountResolvers<ContextType>;
   BitcoinAccount?: BitcoinAccountResolvers<ContextType>;
   BitcoinConnection?: BitcoinConnectionResolvers<ContextType>;
+  CreatePipeInput?: CreatePipeInputResolvers<ContextType>;
   Debug?: DebugResolvers<ContextType>;
   Destination?: DestinationResolvers<ContextType>;
   Filter?: FilterResolvers<ContextType>;

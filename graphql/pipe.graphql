@@ -1,5 +1,5 @@
 type Query {
-  pipe: Pipe!
+  pipe(id: ID!): Pipe!
 }
 
 type User {
@@ -12,6 +12,19 @@ type Pipe {
   flags: Flags!
   sources: [Source!]!
   destinations: [Destination!]!
+}
+
+type CreatePipeInput {
+  id: ID!
+  name: String!
+  flags: Flags!
+  sources: [Source!]!
+  destinations: [Destination!]!
+}
+
+type Mutation {
+  createPipe(input: String!): Pipe!
+  removePipe(input: ID!): Pipe!
 }
 
 type Source {

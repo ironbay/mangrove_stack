@@ -38,6 +38,7 @@ type SlackConnection {
 type SlackTeam {
   id: ID!
   name: String!
+  logo: String!
 }
 
 type SlackChannel {

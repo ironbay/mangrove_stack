@@ -36,6 +36,15 @@ export type BitcoinConnection = {
   logo: Scalars["String"];
 };
 
+export type CreatePipeInput = {
+  __typename?: "CreatePipeInput";
+  destinations: Array<Destination>;
+  flags: Flags;
+  id: Scalars["ID"];
+  name: Scalars["String"];
+  sources: Array<Source>;
+};
+
 export type CreateTodoInput = {
   id: Scalars["String"];
   title: Scalars["String"];
@@ -57,13 +66,23 @@ export type Flags = {
 
 export type Mutation = {
   __typename?: "Mutation";
+  createPipe: Pipe;
   createTodo: Todo;
+  removePipe: Pipe;
   removeTodo?: Maybe<Todo>;
   upload: Scalars["String"];
 };
 
+export type MutationCreatePipeArgs = {
+  input: Scalars["String"];
+};
+
 export type MutationCreateTodoArgs = {
   input: CreateTodoInput;
+};
+
+export type MutationRemovePipeArgs = {
+  input: Scalars["ID"];
 };
 
 export type MutationRemoveTodoArgs = {
@@ -116,6 +135,10 @@ export type Query = {
   user: User;
 };
 
+export type QueryPipeArgs = {
+  id: Scalars["ID"];
+};
+
 export type QueryUserArgs = {
   id: Scalars["ID"];
 };
@@ -151,6 +174,7 @@ export type SlackDestination = {
 export type SlackTeam = {
   __typename?: "SlackTeam";
   id: Scalars["ID"];
+  logo: Scalars["String"];
   name: Scalars["String"];
 };
 
@@ -268,9 +292,34 @@ export type PipeListQuery = {
                 connection: { __typename?: "PlaidConnection"; logo: string };
               };
         }>;
+        destinations: Array<
+          | {
+              __typename?: "SlackDestination";
+              team: { __typename?: "SlackTeam"; logo: string };
+            }
+          | { __typename?: "TwilioDestination"; id: string }
+        >;
       }>;
     };
   };
+};
+
+export type CreatePipeMutationVariables = Exact<{
+  input: Scalars["String"];
+}>;
+
+export type CreatePipeMutation = {
+  __typename?: "Mutation";
+  createPipe: { __typename?: "Pipe"; id: string; name: string };
+};
+
+export type RemovePipeMutationVariables = Exact<{
+  id: Scalars["ID"];
+}>;
+
+export type RemovePipeMutation = {
+  __typename?: "Mutation";
+  removePipe: { __typename?: "Pipe"; id: string; name: string };
 };
 
 export const TodosDocument = gql`
@@ -350,6 +399,16 @@ export const PipeListDocument = gql`
               }
             }
           }
+          destinations {
+            ... on SlackDestination {
+              team {
+                logo
+              }
+            }
+            ... on TwilioDestination {
+              id
+            }
+          }
         }
       }
     }
@@ -360,4 +419,32 @@ export function usePipeListQuery(
   options: Omit<Urql.UseQueryArgs<PipeListQueryVariables>, "query"> = {}
 ) {
   return Urql.useQuery<PipeListQuery>({ query: PipeListDocument, ...options });
+}
+export const CreatePipeDocument = gql`
+  mutation CreatePipe($input: String!) {
+    createPipe(input: $input) {
+      id
+      name
+    }
+  }
+`;
+
+export function useCreatePipeMutation() {
+  return Urql.useMutation<CreatePipeMutation, CreatePipeMutationVariables>(
+    CreatePipeDocument
+  );
+}
+export const RemovePipeDocument = gql`
+  mutation RemovePipe($id: ID!) {
+    removePipe(input: $id) {
+      id
+      name
+    }
+  }
+`;
+
+export function useRemovePipeMutation() {
+  return Urql.useMutation<RemovePipeMutation, RemovePipeMutationVariables>(
+    RemovePipeDocument
+  );
 }

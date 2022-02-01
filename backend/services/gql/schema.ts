@@ -14,6 +14,13 @@ export const typeDefs = gql`
     account: BitcoinAccount!
     logo: String!
   }
+  type CreatePipeInput {
+    destinations: [Destination!]!
+    flags: Flags!
+    id: ID!
+    name: String!
+    sources: [Source!]!
+  }
   input CreateTodoInput {
     id: String!
     title: String!
@@ -27,7 +34,9 @@ export const typeDefs = gql`
     enabled: Boolean!
   }
   type Mutation {
+    createPipe(input: String!): Pipe!
     createTodo(input: CreateTodoInput!): Todo!
+    removePipe(input: ID!): Pipe!
     removeTodo(id: String!): Todo
     upload(name: String!, type: String!): String!
   }
@@ -58,7 +67,7 @@ export const typeDefs = gql`
   }
   type Query {
     debug: Debug!
-    pipe: Pipe!
+    pipe(id: ID!): Pipe!
     session: Session!
     user(id: ID!): User!
   }
@@ -84,6 +93,7 @@ export const typeDefs = gql`
   }
   type SlackTeam {
     id: ID!
+    logo: String!
     name: String!
   }
   type Source {

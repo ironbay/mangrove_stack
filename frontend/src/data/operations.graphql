@@ -27,7 +27,7 @@ mutation Upload($name: String!, $type: String!) {
   upload(name: $name, type: $type)
 }
 
-# ====
+#==
 query PipeList {
   session {
     currentUser {
@@ -47,42 +47,31 @@ query PipeList {
             }
           }
         }
+        destinations {
+          ... on SlackDestination {
+            team {
+              logo
+            }
+          }
+          ... on TwilioDestination {
+            id
+          }
+        }
       }
     }
   }
 }
-# query Pipe {
-#   pipe {
-#     sources {
-#       account {
-#         ... on PlaidAccount {
-#           id
-#           name
-#         }
-#       }
-#       filters {
-#         id
-#         kind
-#         op
-#         ... on NumberFilter {
-#           int
-#         }
-#         ... on StringFilter {
-#           word
-#         }
-#       }
-#     }
-#     destinations {
-#       ... on SlackDestination {
-#         channel {
-#           id
-#           name
-#         }
-#         team {
-#           id
-#           name
-#         }
-#       }
-#     }
-#   }
-# }
+
+mutation CreatePipe($input: String!) {
+  createPipe(input: $input) {
+    id
+    name
+  }
+}
+
+mutation RemovePipe($id: ID!) {
+  removePipe(input: $id) {
+    id
+    name
+  }
+}
