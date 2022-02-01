@@ -1,26 +1,42 @@
 type Query {
-  pipe: Pipe!
+  pipe(id: ID!): Pipe!
+}
+
+type Mutation {
+  createPipe(input: PipeInput!): Pipe!
+  updatePipe(input: PipeInput!): Pipe!
+  removePipe(input: String!): ID!
+}
+
+type User {
+  pipes: [Pipe!]!
 }
 
 type Pipe {
+  id: ID!
   name: String!
   flags: Flags!
   sources: [Source!]!
   destinations: [Destination!]!
 }
 
-type Source {
-  account: SourceAccount!
-  filters: [Filter!]!
+type Flags {
+  enabled: Boolean!
 }
 
-union SourceAccount = PlaidAccount
+type Source {
+  id: ID!
+  account: SourceAccount!
+  filters: [FilterUnion]!
+}
 
-union Destination = SlackDestination
+union SourceAccount = PlaidAccount | BitcoinAccount
 
-type SlackDestination {
-  team: SlackTeam!
-  channel: SlackChannel!
+union FilterUnion = NumberFilter | StringFilter
+
+type Filters {
+  number: [NumberFilter!]!
+  string: [StringFilter!]!
 }
 
 interface Filter {
@@ -33,16 +49,84 @@ type NumberFilter implements Filter {
   id: ID!
   kind: String!
   op: String!
-  int: Int!
+  value: Int!
 }
 
 type StringFilter implements Filter {
   id: ID!
   kind: String!
   op: String!
-  word: String!
+  value: String!
 }
 
-type Flags {
+union Destination = SlackDestination | TwilioDestination
+
+type SlackDestination {
+  id: ID!
+  team: SlackTeam!
+  channel: SlackChannel!
+}
+
+type TwilioDestination {
+  id: ID!
+  phone: TwilioPhone!
+  connection: TwilioConnection!
+}
+
+input PipeInput {
+  id: ID!
+  name: String!
+  flags: FlagsInput!
+  sources: [SourceInput!]!
+  slack_destinations: [SlackDestinationInput!]!
+  twilio_destinations: [TwilioDestinationInput!]!
+}
+
+input SourceInput {
+  id: ID!
+  account: String!
+  connection: String!
+  filters: FilterInput!
+}
+
+input FilterInput {
+  number: [NumberFilterInput]!
+  string: [StringFilterInput!]!
+}
+
+input NumberFilterInput {
+  id: ID!
+  op: String!
+  kind: String!
+  value: Int!
+}
+
+input StringFilterInput {
+  id: ID!
+  op: String!
+  kind: String!
+  value: String!
+}
+
+input FlagsInput {
   enabled: Boolean!
+}
+
+input DestinationInput {
+  slack: [SlackDestinationInput]!
+  twilio: [TwilioDestinationInput]!
+}
+
+input SlackDestinationInput {
+  id: ID!
+  kind: String!
+  channel: String!
+  connection: String!
+}
+
+input TwilioDestinationInput {
+  id: ID!
+  kind: String!
+  phone: String!
+  connection: String!
 }

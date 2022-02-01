@@ -1,27 +1,63 @@
 type User {
-  plaid_connections: [PlaidConnection!]!
-  slack_connections: [SlackConnection!]!
+  connections: [Connection!]!
 }
 
+type Query {
+  connection(id: ID!): Connection!
+}
+
+type Mutation {
+  removeConnection(input: String!): Connection!
+}
+
+union Connection =
+    PlaidConnection
+  | BitcoinConnection
+  | SlackConnection
+  | TwilioConnection
+
 type PlaidConnection {
+  id: ID!
   accounts: [PlaidAccount!]!
+  logo: String!
+  name: String!
 }
 
 type PlaidAccount {
   id: ID!
   name: String!
   kind: String!
-  subKind: String!
+  category: String!
+  subCategory: String!
+  connection: PlaidConnection!
+}
+
+type BitcoinConnection {
+  id: ID!
+  account: BitcoinAccount!
+  logo: String!
+  name: String!
+}
+
+type BitcoinAccount {
+  id: ID!
+  address: String!
+  kind: String!
+  connection: BitcoinConnection!
 }
 
 type SlackConnection {
+  id: ID!
   team: SlackTeam!
   channels: [SlackChannel!]!
+  logo: String!
+  name: String!
 }
 
 type SlackTeam {
   id: ID!
   name: String!
+  logo: String!
 }
 
 type SlackChannel {
@@ -29,4 +65,17 @@ type SlackChannel {
   name: String!
   topic: String!
   count_members: Int!
+  connection: SlackConnection!
+}
+
+type TwilioConnection {
+  id: ID!
+  phone: TwilioPhone!
+  logo: String!
+  name: String!
+}
+
+type TwilioPhone {
+  raw: String!
+  format: String!
 }

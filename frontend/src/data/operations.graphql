@@ -9,42 +9,6 @@ query Todos {
   }
 }
 
-query Pipe {
-  pipe {
-    sources {
-      account {
-        ... on PlaidAccount {
-          id
-          name
-        }
-      }
-      filters {
-        id
-        kind
-        op
-        ... on NumberFilter {
-          int
-        }
-        ... on StringFilter {
-          word
-        }
-      }
-    }
-    destinations {
-      ... on SlackDestination {
-        channel {
-          id
-          name
-        }
-        team {
-          id
-          name
-        }
-      }
-    }
-  }
-}
-
 mutation RemoveTodo($id: String!) {
   removeTodo(id: $id) {
     id
@@ -61,4 +25,209 @@ mutation CreateTodo($id: String!, $title: String!) {
 
 mutation Upload($name: String!, $type: String!) {
   upload(name: $name, type: $type)
+}
+
+#==
+
+query Pipe($id: ID!) {
+  pipe(id: $id) {
+    sources {
+      id
+      account {
+        ... on PlaidAccount {
+          id
+          name
+          kind
+          category
+          subCategory
+        }
+        ... on BitcoinAccount {
+          id
+          address
+          kind
+        }
+      }
+      filters {
+        ... on NumberFilter {
+          id
+          kind
+          op
+          num: value
+        }
+        ... on StringFilter {
+          id
+          kind
+          op
+          text: value
+        }
+      }
+    }
+    destinations {
+      ... on SlackDestination {
+        id
+        team {
+          id
+          name
+          logo
+        }
+        channel {
+          id
+          name
+          topic
+          count_members
+        }
+      }
+      ... on TwilioDestination {
+        id
+        phone {
+          raw
+          format
+        }
+      }
+    }
+  }
+}
+
+query Pipes {
+  session {
+    currentUser {
+      pipes {
+        id
+        sources {
+          account {
+            ... on PlaidAccount {
+              connection {
+                logo
+              }
+            }
+            ... on BitcoinAccount {
+              connection {
+                logo
+              }
+            }
+          }
+        }
+        destinations {
+          ... on SlackDestination {
+            team {
+              logo
+            }
+          }
+          ... on TwilioDestination {
+            id
+          }
+        }
+      }
+    }
+  }
+}
+
+mutation UpdatePipe($input: PipeInput!) {
+  updatePipe(input: $input) {
+    id
+    name
+  }
+}
+
+mutation CreatePipe($input: PipeInput!) {
+  createPipe(input: $input) {
+    id
+    name
+  }
+}
+
+mutation RemovePipe($id: String!) {
+  removePipe(input: $id)
+}
+
+query Connections {
+  session {
+    currentUser {
+      connections {
+        ... on PlaidConnection {
+          id
+          logo
+          name
+        }
+        ... on BitcoinConnection {
+          id
+          logo
+          name
+        }
+        ... on SlackConnection {
+          id
+          logo
+          name
+        }
+        ... on TwilioConnection {
+          id
+          logo
+          name
+        }
+      }
+    }
+  }
+}
+
+query Connection($id: ID!) {
+  connection(id: $id) {
+    ... on PlaidConnection {
+      id
+      name
+      logo
+      accounts {
+        name
+        category
+        subCategory
+        kind
+      }
+    }
+    ... on BitcoinConnection {
+      id
+      name
+      logo
+      account {
+        address
+        kind
+      }
+    }
+    ... on SlackConnection {
+      id
+      name
+      logo
+      team {
+        name
+      }
+    }
+    ... on TwilioConnection {
+      id
+      name
+      logo
+      phone {
+        raw
+        format
+      }
+    }
+  }
+}
+
+mutation RemoveConnection($id: String!) {
+  removeConnection(input: $id) {
+    ... on PlaidConnection {
+      id
+      name
+    }
+    ... on BitcoinConnection {
+      id
+      name
+    }
+    ... on SlackConnection {
+      id
+      name
+    }
+    ... on TwilioConnection {
+      id
+      name
+    }
+  }
 }
