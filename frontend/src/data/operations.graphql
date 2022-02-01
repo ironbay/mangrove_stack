@@ -9,42 +9,6 @@ query Todos {
   }
 }
 
-query Pipe {
-  pipe {
-    sources {
-      account {
-        ... on PlaidAccount {
-          id
-          name
-        }
-      }
-      filters {
-        id
-        kind
-        op
-        ... on NumberFilter {
-          int
-        }
-        ... on StringFilter {
-          word
-        }
-      }
-    }
-    destinations {
-      ... on SlackDestination {
-        channel {
-          id
-          name
-        }
-        team {
-          id
-          name
-        }
-      }
-    }
-  }
-}
-
 mutation RemoveTodo($id: String!) {
   removeTodo(id: $id) {
     id
@@ -62,3 +26,63 @@ mutation CreateTodo($id: String!, $title: String!) {
 mutation Upload($name: String!, $type: String!) {
   upload(name: $name, type: $type)
 }
+
+# ====
+query PipeList {
+  session {
+    currentUser {
+      pipes {
+        id
+        sources {
+          account {
+            ... on PlaidAccount {
+              connection {
+                logo
+              }
+            }
+            ... on BitcoinAccount {
+              connection {
+                logo
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+# query Pipe {
+#   pipe {
+#     sources {
+#       account {
+#         ... on PlaidAccount {
+#           id
+#           name
+#         }
+#       }
+#       filters {
+#         id
+#         kind
+#         op
+#         ... on NumberFilter {
+#           int
+#         }
+#         ... on StringFilter {
+#           word
+#         }
+#       }
+#     }
+#     destinations {
+#       ... on SlackDestination {
+#         channel {
+#           id
+#           name
+#         }
+#         team {
+#           id
+#           name
+#         }
+#       }
+#     }
+#   }
+# }

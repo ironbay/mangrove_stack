@@ -4,6 +4,16 @@ export const typeDefs = gql`
     query: Query
     mutation: Mutation
   }
+  union Account = BitcoinAccount | PlaidAccount
+  type BitcoinAccount {
+    address: String!
+    connection: BitcoinConnection!
+    kind: String!
+  }
+  type BitcoinConnection {
+    account: BitcoinAccount!
+    logo: String!
+  }
   input CreateTodoInput {
     id: String!
     title: String!
@@ -11,12 +21,8 @@ export const typeDefs = gql`
   type Debug {
     database: String!
   }
-  union Destination = SlackDestination
-  interface Filter {
-    id: ID!
-    kind: String!
-    op: String!
-  }
+  union Destination = SlackDestination | TwilioDestination
+  union Filter = NumberFilter | StringFilter
   type Flags {
     enabled: Boolean!
   }
@@ -25,7 +31,7 @@ export const typeDefs = gql`
     removeTodo(id: String!): Todo
     upload(name: String!, type: String!): String!
   }
-  type NumberFilter implements Filter {
+  type NumberFilter {
     id: ID!
     int: Int!
     kind: String!
@@ -34,17 +40,21 @@ export const typeDefs = gql`
   type Pipe {
     destinations: [Destination!]!
     flags: Flags!
+    id: ID!
     name: String!
     sources: [Source!]!
   }
   type PlaidAccount {
+    category: String!
+    connection: PlaidConnection!
     id: ID!
     kind: String!
     name: String!
-    subKind: String!
+    subCategory: String!
   }
   type PlaidConnection {
     accounts: [PlaidAccount!]!
+    logo: String!
   }
   type Query {
     debug: Debug!
@@ -56,6 +66,7 @@ export const typeDefs = gql`
     currentUser: User!
   }
   type SlackChannel {
+    connection: SlackConnection!
     count_members: Int!
     id: ID!
     name: String!
@@ -63,10 +74,12 @@ export const typeDefs = gql`
   }
   type SlackConnection {
     channels: [SlackChannel!]!
+    logo: String!
     team: SlackTeam!
   }
   type SlackDestination {
     channel: SlackChannel!
+    id: ID!
     team: SlackTeam!
   }
   type SlackTeam {
@@ -74,11 +87,10 @@ export const typeDefs = gql`
     name: String!
   }
   type Source {
-    account: SourceAccount!
+    account: Account!
     filters: [Filter!]!
   }
-  union SourceAccount = PlaidAccount
-  type StringFilter implements Filter {
+  type StringFilter {
     id: ID!
     kind: String!
     op: String!
@@ -88,8 +100,23 @@ export const typeDefs = gql`
     id: ID!
     title: String!
   }
-  type User {
+  type TwilioAccount {
+    connection: TwilioConnection!
     id: ID!
+    phone: String!
+  }
+  type TwilioConnection {
+    account: TwilioAccount!
+    logo: String!
+  }
+  type TwilioDestination {
+    id: ID!
+    phone: String!
+  }
+  type User {
+    bitcoin_connections: [BitcoinConnection!]!
+    id: ID!
+    pipes: [Pipe!]!
     plaid_connections: [PlaidConnection!]!
     slack_connections: [SlackConnection!]!
     todos: [Todo!]!

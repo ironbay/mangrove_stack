@@ -2,7 +2,12 @@ type Query {
   pipe: Pipe!
 }
 
+type User {
+  pipes: [Pipe!]!
+}
+
 type Pipe {
+  id: ID!
   name: String!
   flags: Flags!
   sources: [Source!]!
@@ -10,33 +15,34 @@ type Pipe {
 }
 
 type Source {
-  account: SourceAccount!
+  account: Account!
   filters: [Filter!]!
 }
 
-union SourceAccount = PlaidAccount
+union Account = PlaidAccount | BitcoinAccount
+union Filter = NumberFilter | StringFilter
 
-union Destination = SlackDestination
+union Destination = SlackDestination | TwilioDestination
 
 type SlackDestination {
+  id: ID!
   team: SlackTeam!
   channel: SlackChannel!
 }
 
-interface Filter {
+type TwilioDestination {
   id: ID!
-  kind: String!
-  op: String!
+  phone: String!
 }
 
-type NumberFilter implements Filter {
+type NumberFilter {
   id: ID!
   kind: String!
   op: String!
   int: Int!
 }
 
-type StringFilter implements Filter {
+type StringFilter {
   id: ID!
   kind: String!
   op: String!

@@ -21,6 +21,21 @@ export type Scalars = {
   Float: number;
 };
 
+export type Account = BitcoinAccount | PlaidAccount;
+
+export type BitcoinAccount = {
+  __typename?: "BitcoinAccount";
+  address: Scalars["String"];
+  connection: BitcoinConnection;
+  kind: Scalars["String"];
+};
+
+export type BitcoinConnection = {
+  __typename?: "BitcoinConnection";
+  account: BitcoinAccount;
+  logo: Scalars["String"];
+};
+
 export type CreateTodoInput = {
   id: Scalars["String"];
   title: Scalars["String"];
@@ -31,13 +46,9 @@ export type Debug = {
   database: Scalars["String"];
 };
 
-export type Destination = SlackDestination;
+export type Destination = SlackDestination | TwilioDestination;
 
-export type Filter = {
-  id: Scalars["ID"];
-  kind: Scalars["String"];
-  op: Scalars["String"];
-};
+export type Filter = NumberFilter | StringFilter;
 
 export type Flags = {
   __typename?: "Flags";
@@ -64,7 +75,7 @@ export type MutationUploadArgs = {
   type: Scalars["String"];
 };
 
-export type NumberFilter = Filter & {
+export type NumberFilter = {
   __typename?: "NumberFilter";
   id: Scalars["ID"];
   int: Scalars["Int"];
@@ -76,21 +87,25 @@ export type Pipe = {
   __typename?: "Pipe";
   destinations: Array<Destination>;
   flags: Flags;
+  id: Scalars["ID"];
   name: Scalars["String"];
   sources: Array<Source>;
 };
 
 export type PlaidAccount = {
   __typename?: "PlaidAccount";
+  category: Scalars["String"];
+  connection: PlaidConnection;
   id: Scalars["ID"];
   kind: Scalars["String"];
   name: Scalars["String"];
-  subKind: Scalars["String"];
+  subCategory: Scalars["String"];
 };
 
 export type PlaidConnection = {
   __typename?: "PlaidConnection";
   accounts: Array<PlaidAccount>;
+  logo: Scalars["String"];
 };
 
 export type Query = {
@@ -112,6 +127,7 @@ export type Session = {
 
 export type SlackChannel = {
   __typename?: "SlackChannel";
+  connection: SlackConnection;
   count_members: Scalars["Int"];
   id: Scalars["ID"];
   name: Scalars["String"];
@@ -121,12 +137,14 @@ export type SlackChannel = {
 export type SlackConnection = {
   __typename?: "SlackConnection";
   channels: Array<SlackChannel>;
+  logo: Scalars["String"];
   team: SlackTeam;
 };
 
 export type SlackDestination = {
   __typename?: "SlackDestination";
   channel: SlackChannel;
+  id: Scalars["ID"];
   team: SlackTeam;
 };
 
@@ -138,13 +156,11 @@ export type SlackTeam = {
 
 export type Source = {
   __typename?: "Source";
-  account: SourceAccount;
+  account: Account;
   filters: Array<Filter>;
 };
 
-export type SourceAccount = PlaidAccount;
-
-export type StringFilter = Filter & {
+export type StringFilter = {
   __typename?: "StringFilter";
   id: Scalars["ID"];
   kind: Scalars["String"];
@@ -158,9 +174,30 @@ export type Todo = {
   title: Scalars["String"];
 };
 
+export type TwilioAccount = {
+  __typename?: "TwilioAccount";
+  connection: TwilioConnection;
+  id: Scalars["ID"];
+  phone: Scalars["String"];
+};
+
+export type TwilioConnection = {
+  __typename?: "TwilioConnection";
+  account: TwilioAccount;
+  logo: Scalars["String"];
+};
+
+export type TwilioDestination = {
+  __typename?: "TwilioDestination";
+  id: Scalars["ID"];
+  phone: Scalars["String"];
+};
+
 export type User = {
   __typename?: "User";
+  bitcoin_connections: Array<BitcoinConnection>;
   id: Scalars["ID"];
+  pipes: Array<Pipe>;
   plaid_connections: Array<PlaidConnection>;
   slack_connections: Array<SlackConnection>;
   todos: Array<Todo>;
@@ -176,40 +213,6 @@ export type TodosQuery = {
       __typename?: "User";
       todos: Array<{ __typename?: "Todo"; id: string; title: string }>;
     };
-  };
-};
-
-export type PipeQueryVariables = Exact<{ [key: string]: never }>;
-
-export type PipeQuery = {
-  __typename?: "Query";
-  pipe: {
-    __typename?: "Pipe";
-    sources: Array<{
-      __typename?: "Source";
-      account: { __typename?: "PlaidAccount"; id: string; name: string };
-      filters: Array<
-        | {
-            __typename?: "NumberFilter";
-            int: number;
-            id: string;
-            kind: string;
-            op: string;
-          }
-        | {
-            __typename?: "StringFilter";
-            word: string;
-            id: string;
-            kind: string;
-            op: string;
-          }
-      >;
-    }>;
-    destinations: Array<{
-      __typename?: "SlackDestination";
-      channel: { __typename?: "SlackChannel"; id: string; name: string };
-      team: { __typename?: "SlackTeam"; id: string; name: string };
-    }>;
   };
 };
 
@@ -242,6 +245,34 @@ export type UploadMutationVariables = Exact<{
 
 export type UploadMutation = { __typename?: "Mutation"; upload: string };
 
+export type PipeListQueryVariables = Exact<{ [key: string]: never }>;
+
+export type PipeListQuery = {
+  __typename?: "Query";
+  session: {
+    __typename?: "Session";
+    currentUser: {
+      __typename?: "User";
+      pipes: Array<{
+        __typename?: "Pipe";
+        id: string;
+        sources: Array<{
+          __typename?: "Source";
+          account:
+            | {
+                __typename?: "BitcoinAccount";
+                connection: { __typename?: "BitcoinConnection"; logo: string };
+              }
+            | {
+                __typename?: "PlaidAccount";
+                connection: { __typename?: "PlaidConnection"; logo: string };
+              };
+        }>;
+      }>;
+    };
+  };
+};
+
 export const TodosDocument = gql`
   query Todos {
     session {
@@ -259,49 +290,6 @@ export function useTodosQuery(
   options: Omit<Urql.UseQueryArgs<TodosQueryVariables>, "query"> = {}
 ) {
   return Urql.useQuery<TodosQuery>({ query: TodosDocument, ...options });
-}
-export const PipeDocument = gql`
-  query Pipe {
-    pipe {
-      sources {
-        account {
-          ... on PlaidAccount {
-            id
-            name
-          }
-        }
-        filters {
-          id
-          kind
-          op
-          ... on NumberFilter {
-            int
-          }
-          ... on StringFilter {
-            word
-          }
-        }
-      }
-      destinations {
-        ... on SlackDestination {
-          channel {
-            id
-            name
-          }
-          team {
-            id
-            name
-          }
-        }
-      }
-    }
-  }
-`;
-
-export function usePipeQuery(
-  options: Omit<Urql.UseQueryArgs<PipeQueryVariables>, "query"> = {}
-) {
-  return Urql.useQuery<PipeQuery>({ query: PipeDocument, ...options });
 }
 export const RemoveTodoDocument = gql`
   mutation RemoveTodo($id: String!) {
@@ -341,4 +329,35 @@ export function useUploadMutation() {
   return Urql.useMutation<UploadMutation, UploadMutationVariables>(
     UploadDocument
   );
+}
+export const PipeListDocument = gql`
+  query PipeList {
+    session {
+      currentUser {
+        pipes {
+          id
+          sources {
+            account {
+              ... on PlaidAccount {
+                connection {
+                  logo
+                }
+              }
+              ... on BitcoinAccount {
+                connection {
+                  logo
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export function usePipeListQuery(
+  options: Omit<Urql.UseQueryArgs<PipeListQueryVariables>, "query"> = {}
+) {
+  return Urql.useQuery<PipeListQuery>({ query: PipeListDocument, ...options });
 }
