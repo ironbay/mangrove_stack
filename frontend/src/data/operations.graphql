@@ -62,16 +62,13 @@ query PipeList {
   }
 }
 
-mutation CreatePipe($input: String!) {
+mutation CreatePipe($input: PipeInput!) {
   createPipe(input: $input) {
     id
     name
   }
 }
 
-mutation RemovePipe($id: ID!) {
-  removePipe(input: $id) {
-    id
-    name
-  }
+mutation RemovePipe($id: String!) {
+  removePipe(input: $id)
 }

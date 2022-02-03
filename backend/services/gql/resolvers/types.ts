@@ -25,8 +25,6 @@ export type Scalars = {
   Float: number;
 };
 
-export type Account = BitcoinAccount | PlaidAccount;
-
 export type BitcoinAccount = {
   __typename?: "BitcoinAccount";
   address: Scalars["String"];
@@ -38,15 +36,6 @@ export type BitcoinConnection = {
   __typename?: "BitcoinConnection";
   account: BitcoinAccount;
   logo: Scalars["String"];
-};
-
-export type CreatePipeInput = {
-  __typename?: "CreatePipeInput";
-  destinations: Array<Destination>;
-  flags: Flags;
-  id: Scalars["ID"];
-  name: Scalars["String"];
-  sources: Array<Source>;
 };
 
 export type CreateTodoInput = {
@@ -61,10 +50,34 @@ export type Debug = {
 
 export type Destination = SlackDestination | TwilioDestination;
 
-export type Filter = NumberFilter | StringFilter;
+export type DestinationInput = {
+  slack: Array<InputMaybe<SlackDestinationInput>>;
+  twilio: Array<InputMaybe<TwilioDestinationInput>>;
+};
+
+export type Filter = {
+  id: Scalars["ID"];
+  kind: Scalars["String"];
+  op: Scalars["String"];
+};
+
+export type FilterInput = {
+  number: Array<InputMaybe<NumberFilterInput>>;
+  string: Array<StringFilterInput>;
+};
+
+export type Filters = {
+  __typename?: "Filters";
+  number: Array<NumberFilter>;
+  string: Array<StringFilter>;
+};
 
 export type Flags = {
   __typename?: "Flags";
+  enabled: Scalars["Boolean"];
+};
+
+export type FlagsInput = {
   enabled: Scalars["Boolean"];
 };
 
@@ -72,13 +85,13 @@ export type Mutation = {
   __typename?: "Mutation";
   createPipe: Pipe;
   createTodo: Todo;
-  removePipe: Pipe;
+  removePipe: Scalars["ID"];
   removeTodo?: Maybe<Todo>;
   upload: Scalars["String"];
 };
 
 export type MutationCreatePipeArgs = {
-  input: Scalars["String"];
+  input: PipeInput;
 };
 
 export type MutationCreateTodoArgs = {
@@ -86,7 +99,7 @@ export type MutationCreateTodoArgs = {
 };
 
 export type MutationRemovePipeArgs = {
-  input: Scalars["ID"];
+  input: Scalars["String"];
 };
 
 export type MutationRemoveTodoArgs = {
@@ -98,12 +111,19 @@ export type MutationUploadArgs = {
   type: Scalars["String"];
 };
 
-export type NumberFilter = {
+export type NumberFilter = Filter & {
   __typename?: "NumberFilter";
   id: Scalars["ID"];
-  int: Scalars["Int"];
   kind: Scalars["String"];
   op: Scalars["String"];
+  value: Scalars["Int"];
+};
+
+export type NumberFilterInput = {
+  id: Scalars["ID"];
+  kind: Scalars["String"];
+  op: Scalars["String"];
+  value: Scalars["Int"];
 };
 
 export type Pipe = {
@@ -113,6 +133,15 @@ export type Pipe = {
   id: Scalars["ID"];
   name: Scalars["String"];
   sources: Array<Source>;
+};
+
+export type PipeInput = {
+  flags: FlagsInput;
+  id: Scalars["ID"];
+  name: Scalars["String"];
+  slack_destinations: Array<SlackDestinationInput>;
+  sources: Array<SourceInput>;
+  twilio_destinations: Array<TwilioDestinationInput>;
 };
 
 export type PlaidAccount = {
@@ -175,6 +204,13 @@ export type SlackDestination = {
   team: SlackTeam;
 };
 
+export type SlackDestinationInput = {
+  channel: Scalars["String"];
+  connection: Scalars["String"];
+  id: Scalars["ID"];
+  kind: Scalars["String"];
+};
+
 export type SlackTeam = {
   __typename?: "SlackTeam";
   id: Scalars["ID"];
@@ -184,16 +220,33 @@ export type SlackTeam = {
 
 export type Source = {
   __typename?: "Source";
-  account: Account;
-  filters: Array<Filter>;
+  account: SourceAccount;
+  filters: Filters;
+  id: Scalars["ID"];
 };
 
-export type StringFilter = {
+export type SourceAccount = BitcoinAccount | PlaidAccount;
+
+export type SourceInput = {
+  account: Scalars["String"];
+  connection: Scalars["String"];
+  filters: FilterInput;
+  id: Scalars["ID"];
+};
+
+export type StringFilter = Filter & {
   __typename?: "StringFilter";
   id: Scalars["ID"];
   kind: Scalars["String"];
   op: Scalars["String"];
-  word: Scalars["String"];
+  value: Scalars["String"];
+};
+
+export type StringFilterInput = {
+  id: Scalars["ID"];
+  kind: Scalars["String"];
+  op: Scalars["String"];
+  value: Scalars["String"];
 };
 
 export type Todo = {
@@ -217,7 +270,15 @@ export type TwilioConnection = {
 
 export type TwilioDestination = {
   __typename?: "TwilioDestination";
+  connection: TwilioConnection;
   id: Scalars["ID"];
+  phone: Scalars["String"];
+};
+
+export type TwilioDestinationInput = {
+  connection: Scalars["String"];
+  id: Scalars["ID"];
+  kind: Scalars["String"];
   phone: Scalars["String"];
 };
 
@@ -341,32 +402,25 @@ export type DirectiveResolverFn<
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
-  Account: DeepPartial<
-    ResolversTypes["BitcoinAccount"] | ResolversTypes["PlaidAccount"]
-  >;
   BitcoinAccount: ResolverTypeWrapper<DeepPartial<BitcoinAccount>>;
   BitcoinConnection: ResolverTypeWrapper<DeepPartial<BitcoinConnection>>;
   Boolean: ResolverTypeWrapper<DeepPartial<Scalars["Boolean"]>>;
-  CreatePipeInput: ResolverTypeWrapper<
-    DeepPartial<
-      Omit<CreatePipeInput, "destinations"> & {
-        destinations: Array<ResolversTypes["Destination"]>;
-      }
-    >
-  >;
   CreateTodoInput: ResolverTypeWrapper<DeepPartial<CreateTodoInput>>;
   Debug: ResolverTypeWrapper<DeepPartial<Debug>>;
   Destination: DeepPartial<
     ResolversTypes["SlackDestination"] | ResolversTypes["TwilioDestination"]
   >;
-  Filter: DeepPartial<
-    ResolversTypes["NumberFilter"] | ResolversTypes["StringFilter"]
-  >;
+  DestinationInput: ResolverTypeWrapper<DeepPartial<DestinationInput>>;
+  Filter: ResolversTypes["NumberFilter"] | ResolversTypes["StringFilter"];
+  FilterInput: ResolverTypeWrapper<DeepPartial<FilterInput>>;
+  Filters: ResolverTypeWrapper<DeepPartial<Filters>>;
   Flags: ResolverTypeWrapper<DeepPartial<Flags>>;
+  FlagsInput: ResolverTypeWrapper<DeepPartial<FlagsInput>>;
   ID: ResolverTypeWrapper<DeepPartial<Scalars["ID"]>>;
   Int: ResolverTypeWrapper<DeepPartial<Scalars["Int"]>>;
   Mutation: ResolverTypeWrapper<{}>;
   NumberFilter: ResolverTypeWrapper<DeepPartial<NumberFilter>>;
+  NumberFilterInput: ResolverTypeWrapper<DeepPartial<NumberFilterInput>>;
   Pipe: ResolverTypeWrapper<
     DeepPartial<
       Omit<Pipe, "destinations"> & {
@@ -374,6 +428,7 @@ export type ResolversTypes = ResolversObject<{
       }
     >
   >;
+  PipeInput: ResolverTypeWrapper<DeepPartial<PipeInput>>;
   PlaidAccount: ResolverTypeWrapper<DeepPartial<PlaidAccount>>;
   PlaidConnection: ResolverTypeWrapper<DeepPartial<PlaidConnection>>;
   Query: ResolverTypeWrapper<{}>;
@@ -381,57 +436,62 @@ export type ResolversTypes = ResolversObject<{
   SlackChannel: ResolverTypeWrapper<DeepPartial<SlackChannel>>;
   SlackConnection: ResolverTypeWrapper<DeepPartial<SlackConnection>>;
   SlackDestination: ResolverTypeWrapper<DeepPartial<SlackDestination>>;
+  SlackDestinationInput: ResolverTypeWrapper<
+    DeepPartial<SlackDestinationInput>
+  >;
   SlackTeam: ResolverTypeWrapper<DeepPartial<SlackTeam>>;
   Source: ResolverTypeWrapper<
     DeepPartial<
-      Omit<Source, "account" | "filters"> & {
-        account: ResolversTypes["Account"];
-        filters: Array<ResolversTypes["Filter"]>;
-      }
+      Omit<Source, "account"> & { account: ResolversTypes["SourceAccount"] }
     >
   >;
+  SourceAccount: DeepPartial<
+    ResolversTypes["BitcoinAccount"] | ResolversTypes["PlaidAccount"]
+  >;
+  SourceInput: ResolverTypeWrapper<DeepPartial<SourceInput>>;
   String: ResolverTypeWrapper<DeepPartial<Scalars["String"]>>;
   StringFilter: ResolverTypeWrapper<DeepPartial<StringFilter>>;
+  StringFilterInput: ResolverTypeWrapper<DeepPartial<StringFilterInput>>;
   Todo: ResolverTypeWrapper<DeepPartial<Todo>>;
   TwilioAccount: ResolverTypeWrapper<DeepPartial<TwilioAccount>>;
   TwilioConnection: ResolverTypeWrapper<DeepPartial<TwilioConnection>>;
   TwilioDestination: ResolverTypeWrapper<DeepPartial<TwilioDestination>>;
+  TwilioDestinationInput: ResolverTypeWrapper<
+    DeepPartial<TwilioDestinationInput>
+  >;
   User: ResolverTypeWrapper<DeepPartial<User>>;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
-  Account: DeepPartial<
-    | ResolversParentTypes["BitcoinAccount"]
-    | ResolversParentTypes["PlaidAccount"]
-  >;
   BitcoinAccount: DeepPartial<BitcoinAccount>;
   BitcoinConnection: DeepPartial<BitcoinConnection>;
   Boolean: DeepPartial<Scalars["Boolean"]>;
-  CreatePipeInput: DeepPartial<
-    Omit<CreatePipeInput, "destinations"> & {
-      destinations: Array<ResolversParentTypes["Destination"]>;
-    }
-  >;
   CreateTodoInput: DeepPartial<CreateTodoInput>;
   Debug: DeepPartial<Debug>;
   Destination: DeepPartial<
     | ResolversParentTypes["SlackDestination"]
     | ResolversParentTypes["TwilioDestination"]
   >;
-  Filter: DeepPartial<
-    ResolversParentTypes["NumberFilter"] | ResolversParentTypes["StringFilter"]
-  >;
+  DestinationInput: DeepPartial<DestinationInput>;
+  Filter:
+    | ResolversParentTypes["NumberFilter"]
+    | ResolversParentTypes["StringFilter"];
+  FilterInput: DeepPartial<FilterInput>;
+  Filters: DeepPartial<Filters>;
   Flags: DeepPartial<Flags>;
+  FlagsInput: DeepPartial<FlagsInput>;
   ID: DeepPartial<Scalars["ID"]>;
   Int: DeepPartial<Scalars["Int"]>;
   Mutation: {};
   NumberFilter: DeepPartial<NumberFilter>;
+  NumberFilterInput: DeepPartial<NumberFilterInput>;
   Pipe: DeepPartial<
     Omit<Pipe, "destinations"> & {
       destinations: Array<ResolversParentTypes["Destination"]>;
     }
   >;
+  PipeInput: DeepPartial<PipeInput>;
   PlaidAccount: DeepPartial<PlaidAccount>;
   PlaidConnection: DeepPartial<PlaidConnection>;
   Query: {};
@@ -439,31 +499,25 @@ export type ResolversParentTypes = ResolversObject<{
   SlackChannel: DeepPartial<SlackChannel>;
   SlackConnection: DeepPartial<SlackConnection>;
   SlackDestination: DeepPartial<SlackDestination>;
+  SlackDestinationInput: DeepPartial<SlackDestinationInput>;
   SlackTeam: DeepPartial<SlackTeam>;
   Source: DeepPartial<
-    Omit<Source, "account" | "filters"> & {
-      account: ResolversParentTypes["Account"];
-      filters: Array<ResolversParentTypes["Filter"]>;
-    }
+    Omit<Source, "account"> & { account: ResolversParentTypes["SourceAccount"] }
   >;
+  SourceAccount: DeepPartial<
+    | ResolversParentTypes["BitcoinAccount"]
+    | ResolversParentTypes["PlaidAccount"]
+  >;
+  SourceInput: DeepPartial<SourceInput>;
   String: DeepPartial<Scalars["String"]>;
   StringFilter: DeepPartial<StringFilter>;
+  StringFilterInput: DeepPartial<StringFilterInput>;
   Todo: DeepPartial<Todo>;
   TwilioAccount: DeepPartial<TwilioAccount>;
   TwilioConnection: DeepPartial<TwilioConnection>;
   TwilioDestination: DeepPartial<TwilioDestination>;
+  TwilioDestinationInput: DeepPartial<TwilioDestinationInput>;
   User: DeepPartial<User>;
-}>;
-
-export type AccountResolvers<
-  ContextType = Context,
-  ParentType extends ResolversParentTypes["Account"] = ResolversParentTypes["Account"]
-> = ResolversObject<{
-  __resolveType: TypeResolveFn<
-    "BitcoinAccount" | "PlaidAccount",
-    ParentType,
-    ContextType
-  >;
 }>;
 
 export type BitcoinAccountResolvers<
@@ -486,22 +540,6 @@ export type BitcoinConnectionResolvers<
 > = ResolversObject<{
   account?: Resolver<ResolversTypes["BitcoinAccount"], ParentType, ContextType>;
   logo?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
-export type CreatePipeInputResolvers<
-  ContextType = Context,
-  ParentType extends ResolversParentTypes["CreatePipeInput"] = ResolversParentTypes["CreatePipeInput"]
-> = ResolversObject<{
-  destinations?: Resolver<
-    Array<ResolversTypes["Destination"]>,
-    ParentType,
-    ContextType
-  >;
-  flags?: Resolver<ResolversTypes["Flags"], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
-  name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  sources?: Resolver<Array<ResolversTypes["Source"]>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -533,6 +571,26 @@ export type FilterResolvers<
     ParentType,
     ContextType
   >;
+  id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
+  kind?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  op?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+}>;
+
+export type FiltersResolvers<
+  ContextType = Context,
+  ParentType extends ResolversParentTypes["Filters"] = ResolversParentTypes["Filters"]
+> = ResolversObject<{
+  number?: Resolver<
+    Array<ResolversTypes["NumberFilter"]>,
+    ParentType,
+    ContextType
+  >;
+  string?: Resolver<
+    Array<ResolversTypes["StringFilter"]>,
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type FlagsResolvers<
@@ -560,7 +618,7 @@ export type MutationResolvers<
     RequireFields<MutationCreateTodoArgs, "input">
   >;
   removePipe?: Resolver<
-    ResolversTypes["Pipe"],
+    ResolversTypes["ID"],
     ParentType,
     ContextType,
     RequireFields<MutationRemovePipeArgs, "input">
@@ -584,9 +642,9 @@ export type NumberFilterResolvers<
   ParentType extends ResolversParentTypes["NumberFilter"] = ResolversParentTypes["NumberFilter"]
 > = ResolversObject<{
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
-  int?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
   kind?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   op?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  value?: Resolver<ResolversTypes["Int"], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -718,9 +776,21 @@ export type SourceResolvers<
   ContextType = Context,
   ParentType extends ResolversParentTypes["Source"] = ResolversParentTypes["Source"]
 > = ResolversObject<{
-  account?: Resolver<ResolversTypes["Account"], ParentType, ContextType>;
-  filters?: Resolver<Array<ResolversTypes["Filter"]>, ParentType, ContextType>;
+  account?: Resolver<ResolversTypes["SourceAccount"], ParentType, ContextType>;
+  filters?: Resolver<ResolversTypes["Filters"], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type SourceAccountResolvers<
+  ContextType = Context,
+  ParentType extends ResolversParentTypes["SourceAccount"] = ResolversParentTypes["SourceAccount"]
+> = ResolversObject<{
+  __resolveType: TypeResolveFn<
+    "BitcoinAccount" | "PlaidAccount",
+    ParentType,
+    ContextType
+  >;
 }>;
 
 export type StringFilterResolvers<
@@ -730,7 +800,7 @@ export type StringFilterResolvers<
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
   kind?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   op?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  word?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  value?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -770,6 +840,11 @@ export type TwilioDestinationResolvers<
   ContextType = Context,
   ParentType extends ResolversParentTypes["TwilioDestination"] = ResolversParentTypes["TwilioDestination"]
 > = ResolversObject<{
+  connection?: Resolver<
+    ResolversTypes["TwilioConnection"],
+    ParentType,
+    ContextType
+  >;
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
   phone?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -801,13 +876,12 @@ export type UserResolvers<
 }>;
 
 export type Resolvers<ContextType = Context> = ResolversObject<{
-  Account?: AccountResolvers<ContextType>;
   BitcoinAccount?: BitcoinAccountResolvers<ContextType>;
   BitcoinConnection?: BitcoinConnectionResolvers<ContextType>;
-  CreatePipeInput?: CreatePipeInputResolvers<ContextType>;
   Debug?: DebugResolvers<ContextType>;
   Destination?: DestinationResolvers<ContextType>;
   Filter?: FilterResolvers<ContextType>;
+  Filters?: FiltersResolvers<ContextType>;
   Flags?: FlagsResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   NumberFilter?: NumberFilterResolvers<ContextType>;
@@ -821,6 +895,7 @@ export type Resolvers<ContextType = Context> = ResolversObject<{
   SlackDestination?: SlackDestinationResolvers<ContextType>;
   SlackTeam?: SlackTeamResolvers<ContextType>;
   Source?: SourceResolvers<ContextType>;
+  SourceAccount?: SourceAccountResolvers<ContextType>;
   StringFilter?: StringFilterResolvers<ContextType>;
   Todo?: TodoResolvers<ContextType>;
   TwilioAccount?: TwilioAccountResolvers<ContextType>;

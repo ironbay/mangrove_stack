@@ -21,8 +21,6 @@ export type Scalars = {
   Float: number;
 };
 
-export type Account = BitcoinAccount | PlaidAccount;
-
 export type BitcoinAccount = {
   __typename?: "BitcoinAccount";
   address: Scalars["String"];
@@ -34,15 +32,6 @@ export type BitcoinConnection = {
   __typename?: "BitcoinConnection";
   account: BitcoinAccount;
   logo: Scalars["String"];
-};
-
-export type CreatePipeInput = {
-  __typename?: "CreatePipeInput";
-  destinations: Array<Destination>;
-  flags: Flags;
-  id: Scalars["ID"];
-  name: Scalars["String"];
-  sources: Array<Source>;
 };
 
 export type CreateTodoInput = {
@@ -57,10 +46,34 @@ export type Debug = {
 
 export type Destination = SlackDestination | TwilioDestination;
 
-export type Filter = NumberFilter | StringFilter;
+export type DestinationInput = {
+  slack: Array<InputMaybe<SlackDestinationInput>>;
+  twilio: Array<InputMaybe<TwilioDestinationInput>>;
+};
+
+export type Filter = {
+  id: Scalars["ID"];
+  kind: Scalars["String"];
+  op: Scalars["String"];
+};
+
+export type FilterInput = {
+  number: Array<InputMaybe<NumberFilterInput>>;
+  string: Array<StringFilterInput>;
+};
+
+export type Filters = {
+  __typename?: "Filters";
+  number: Array<NumberFilter>;
+  string: Array<StringFilter>;
+};
 
 export type Flags = {
   __typename?: "Flags";
+  enabled: Scalars["Boolean"];
+};
+
+export type FlagsInput = {
   enabled: Scalars["Boolean"];
 };
 
@@ -68,13 +81,13 @@ export type Mutation = {
   __typename?: "Mutation";
   createPipe: Pipe;
   createTodo: Todo;
-  removePipe: Pipe;
+  removePipe: Scalars["ID"];
   removeTodo?: Maybe<Todo>;
   upload: Scalars["String"];
 };
 
 export type MutationCreatePipeArgs = {
-  input: Scalars["String"];
+  input: PipeInput;
 };
 
 export type MutationCreateTodoArgs = {
@@ -82,7 +95,7 @@ export type MutationCreateTodoArgs = {
 };
 
 export type MutationRemovePipeArgs = {
-  input: Scalars["ID"];
+  input: Scalars["String"];
 };
 
 export type MutationRemoveTodoArgs = {
@@ -94,12 +107,19 @@ export type MutationUploadArgs = {
   type: Scalars["String"];
 };
 
-export type NumberFilter = {
+export type NumberFilter = Filter & {
   __typename?: "NumberFilter";
   id: Scalars["ID"];
-  int: Scalars["Int"];
   kind: Scalars["String"];
   op: Scalars["String"];
+  value: Scalars["Int"];
+};
+
+export type NumberFilterInput = {
+  id: Scalars["ID"];
+  kind: Scalars["String"];
+  op: Scalars["String"];
+  value: Scalars["Int"];
 };
 
 export type Pipe = {
@@ -109,6 +129,15 @@ export type Pipe = {
   id: Scalars["ID"];
   name: Scalars["String"];
   sources: Array<Source>;
+};
+
+export type PipeInput = {
+  flags: FlagsInput;
+  id: Scalars["ID"];
+  name: Scalars["String"];
+  slack_destinations: Array<SlackDestinationInput>;
+  sources: Array<SourceInput>;
+  twilio_destinations: Array<TwilioDestinationInput>;
 };
 
 export type PlaidAccount = {
@@ -171,6 +200,13 @@ export type SlackDestination = {
   team: SlackTeam;
 };
 
+export type SlackDestinationInput = {
+  channel: Scalars["String"];
+  connection: Scalars["String"];
+  id: Scalars["ID"];
+  kind: Scalars["String"];
+};
+
 export type SlackTeam = {
   __typename?: "SlackTeam";
   id: Scalars["ID"];
@@ -180,16 +216,33 @@ export type SlackTeam = {
 
 export type Source = {
   __typename?: "Source";
-  account: Account;
-  filters: Array<Filter>;
+  account: SourceAccount;
+  filters: Filters;
+  id: Scalars["ID"];
 };
 
-export type StringFilter = {
+export type SourceAccount = BitcoinAccount | PlaidAccount;
+
+export type SourceInput = {
+  account: Scalars["String"];
+  connection: Scalars["String"];
+  filters: FilterInput;
+  id: Scalars["ID"];
+};
+
+export type StringFilter = Filter & {
   __typename?: "StringFilter";
   id: Scalars["ID"];
   kind: Scalars["String"];
   op: Scalars["String"];
-  word: Scalars["String"];
+  value: Scalars["String"];
+};
+
+export type StringFilterInput = {
+  id: Scalars["ID"];
+  kind: Scalars["String"];
+  op: Scalars["String"];
+  value: Scalars["String"];
 };
 
 export type Todo = {
@@ -213,7 +266,15 @@ export type TwilioConnection = {
 
 export type TwilioDestination = {
   __typename?: "TwilioDestination";
+  connection: TwilioConnection;
   id: Scalars["ID"];
+  phone: Scalars["String"];
+};
+
+export type TwilioDestinationInput = {
+  connection: Scalars["String"];
+  id: Scalars["ID"];
+  kind: Scalars["String"];
   phone: Scalars["String"];
 };
 
@@ -305,7 +366,7 @@ export type PipeListQuery = {
 };
 
 export type CreatePipeMutationVariables = Exact<{
-  input: Scalars["String"];
+  input: PipeInput;
 }>;
 
 export type CreatePipeMutation = {
@@ -314,12 +375,12 @@ export type CreatePipeMutation = {
 };
 
 export type RemovePipeMutationVariables = Exact<{
-  id: Scalars["ID"];
+  id: Scalars["String"];
 }>;
 
 export type RemovePipeMutation = {
   __typename?: "Mutation";
-  removePipe: { __typename?: "Pipe"; id: string; name: string };
+  removePipe: string;
 };
 
 export const TodosDocument = gql`
@@ -421,7 +482,7 @@ export function usePipeListQuery(
   return Urql.useQuery<PipeListQuery>({ query: PipeListDocument, ...options });
 }
 export const CreatePipeDocument = gql`
-  mutation CreatePipe($input: String!) {
+  mutation CreatePipe($input: PipeInput!) {
     createPipe(input: $input) {
       id
       name
@@ -435,11 +496,8 @@ export function useCreatePipeMutation() {
   );
 }
 export const RemovePipeDocument = gql`
-  mutation RemovePipe($id: ID!) {
-    removePipe(input: $id) {
-      id
-      name
-    }
+  mutation RemovePipe($id: String!) {
+    removePipe(input: $id)
   }
 `;
 

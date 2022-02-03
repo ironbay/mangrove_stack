@@ -2,6 +2,11 @@ type Query {
   pipe(id: ID!): Pipe!
 }
 
+type Mutation {
+  createPipe(input: PipeInput!): Pipe!
+  removePipe(input: String!): ID!
+}
+
 type User {
   pipes: [Pipe!]!
 }
@@ -14,26 +19,42 @@ type Pipe {
   destinations: [Destination!]!
 }
 
-input CreatePipeInput {
-  id: ID!
-  name: String!
-  flags: Flags!
-  sources: [Source!]!
-  destinations: [Destination!]!
-}
-
-type Mutation {
-  createPipe(input: CreatePipeInput!): Pipe!
-  removePipe(input: ID!): Pipe!
+type Flags {
+  enabled: Boolean!
 }
 
 type Source {
-  account: Account!
-  filters: [Filter!]!
+  id: ID!
+  account: SourceAccount!
+  filters: Filters!
 }
 
-union Account = PlaidAccount | BitcoinAccount
-union Filter = NumberFilter | StringFilter
+union SourceAccount = PlaidAccount | BitcoinAccount
+
+type Filters {
+  number: [NumberFilter!]!
+  string: [StringFilter!]!
+}
+
+interface Filter {
+  id: ID!
+  kind: String!
+  op: String!
+}
+
+type NumberFilter implements Filter {
+  id: ID!
+  kind: String!
+  op: String!
+  value: Int!
+}
+
+type StringFilter implements Filter {
+  id: ID!
+  kind: String!
+  op: String!
+  value: String!
+}
 
 union Destination = SlackDestination | TwilioDestination
 
@@ -46,22 +67,63 @@ type SlackDestination {
 type TwilioDestination {
   id: ID!
   phone: String!
+  connection: TwilioConnection!
 }
 
-type NumberFilter {
+input PipeInput {
   id: ID!
-  kind: String!
-  op: String!
-  int: Int!
+  name: String!
+  flags: FlagsInput!
+  sources: [SourceInput!]!
+  slack_destinations: [SlackDestinationInput!]!
+  twilio_destinations: [TwilioDestinationInput!]!
 }
 
-type StringFilter {
+input SourceInput {
   id: ID!
-  kind: String!
-  op: String!
-  word: String!
+  account: String!
+  connection: String!
+  filters: FilterInput!
 }
 
-type Flags {
+input FilterInput {
+  number: [NumberFilterInput]!
+  string: [StringFilterInput!]!
+}
+
+input NumberFilterInput {
+  id: ID!
+  op: String!
+  kind: String!
+  value: Int!
+}
+
+input StringFilterInput {
+  id: ID!
+  op: String!
+  kind: String!
+  value: String!
+}
+
+input FlagsInput {
   enabled: Boolean!
+}
+
+input DestinationInput {
+  slack: [SlackDestinationInput]!
+  twilio: [TwilioDestinationInput]!
+}
+
+input SlackDestinationInput {
+  id: ID!
+  kind: String!
+  channel: String!
+  connection: String!
+}
+
+input TwilioDestinationInput {
+  id: ID!
+  kind: String!
+  phone: String!
+  connection: String!
 }
