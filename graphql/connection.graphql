@@ -1,12 +1,17 @@
 type User {
-  plaid_connections: [PlaidConnection!]!
-  slack_connections: [SlackConnection!]!
-  bitcoin_connections: [BitcoinConnection!]!
+  connections: [Connection!]!
 }
+
+union Connection =
+    PlaidConnection
+  | BitcoinConnection
+  | SlackConnection
+  | TwilioConnection
 
 type PlaidConnection {
   accounts: [PlaidAccount!]!
   logo: String!
+  name: String!
 }
 
 type PlaidAccount {
@@ -21,6 +26,7 @@ type PlaidAccount {
 type BitcoinConnection {
   account: BitcoinAccount!
   logo: String!
+  name: String!
 }
 
 type BitcoinAccount {
@@ -33,6 +39,7 @@ type SlackConnection {
   team: SlackTeam!
   channels: [SlackChannel!]!
   logo: String!
+  name: String!
 }
 
 type SlackTeam {
@@ -52,6 +59,7 @@ type SlackChannel {
 type TwilioConnection {
   account: TwilioAccount!
   logo: String!
+  name: String!
 }
 
 type TwilioAccount {

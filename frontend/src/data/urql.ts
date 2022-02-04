@@ -32,7 +32,14 @@ export type BitcoinConnection = {
   __typename?: "BitcoinConnection";
   account: BitcoinAccount;
   logo: Scalars["String"];
+  name: Scalars["String"];
 };
+
+export type Connection =
+  | BitcoinConnection
+  | PlaidConnection
+  | SlackConnection
+  | TwilioConnection;
 
 export type CreateTodoInput = {
   id: Scalars["String"];
@@ -159,6 +166,7 @@ export type PlaidConnection = {
   __typename?: "PlaidConnection";
   accounts: Array<PlaidAccount>;
   logo: Scalars["String"];
+  name: Scalars["String"];
 };
 
 export type Query = {
@@ -195,6 +203,7 @@ export type SlackConnection = {
   __typename?: "SlackConnection";
   channels: Array<SlackChannel>;
   logo: Scalars["String"];
+  name: Scalars["String"];
   team: SlackTeam;
 };
 
@@ -267,6 +276,7 @@ export type TwilioConnection = {
   __typename?: "TwilioConnection";
   account: TwilioAccount;
   logo: Scalars["String"];
+  name: Scalars["String"];
 };
 
 export type TwilioDestination = {
@@ -285,11 +295,9 @@ export type TwilioDestinationInput = {
 
 export type User = {
   __typename?: "User";
-  bitcoin_connections: Array<BitcoinConnection>;
+  connections: Array<Connection>;
   id: Scalars["ID"];
   pipes: Array<Pipe>;
-  plaid_connections: Array<PlaidConnection>;
-  slack_connections: Array<SlackConnection>;
   todos: Array<Todo>;
 };
 
@@ -335,9 +343,9 @@ export type UploadMutationVariables = Exact<{
 
 export type UploadMutation = { __typename?: "Mutation"; upload: string };
 
-export type PipeListQueryVariables = Exact<{ [key: string]: never }>;
+export type PipesQueryVariables = Exact<{ [key: string]: never }>;
 
-export type PipeListQuery = {
+export type PipesQuery = {
   __typename?: "Query";
   session: {
     __typename?: "Session";
@@ -397,6 +405,24 @@ export type RemovePipeMutation = {
   removePipe: string;
 };
 
+export type ConnectionsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type ConnectionsQuery = {
+  __typename?: "Query";
+  session: {
+    __typename?: "Session";
+    currentUser: {
+      __typename?: "User";
+      connections: Array<
+        | { __typename?: "BitcoinConnection"; logo: string; name: string }
+        | { __typename?: "PlaidConnection"; logo: string; name: string }
+        | { __typename?: "SlackConnection"; logo: string; name: string }
+        | { __typename?: "TwilioConnection"; logo: string; name: string }
+      >;
+    };
+  };
+};
+
 export const TodosDocument = gql`
   query Todos {
     session {
@@ -454,8 +480,8 @@ export function useUploadMutation() {
     UploadDocument
   );
 }
-export const PipeListDocument = gql`
-  query PipeList {
+export const PipesDocument = gql`
+  query Pipes {
     session {
       currentUser {
         pipes {
@@ -490,10 +516,10 @@ export const PipeListDocument = gql`
   }
 `;
 
-export function usePipeListQuery(
-  options: Omit<Urql.UseQueryArgs<PipeListQueryVariables>, "query"> = {}
+export function usePipesQuery(
+  options: Omit<Urql.UseQueryArgs<PipesQueryVariables>, "query"> = {}
 ) {
-  return Urql.useQuery<PipeListQuery>({ query: PipeListDocument, ...options });
+  return Urql.useQuery<PipesQuery>({ query: PipesDocument, ...options });
 }
 export const UpdatePipeDocument = gql`
   mutation UpdatePipe($input: PipeInput!) {
@@ -533,4 +559,39 @@ export function useRemovePipeMutation() {
   return Urql.useMutation<RemovePipeMutation, RemovePipeMutationVariables>(
     RemovePipeDocument
   );
+}
+export const ConnectionsDocument = gql`
+  query Connections {
+    session {
+      currentUser {
+        connections {
+          ... on PlaidConnection {
+            logo
+            name
+          }
+          ... on BitcoinConnection {
+            logo
+            name
+          }
+          ... on SlackConnection {
+            logo
+            name
+          }
+          ... on TwilioConnection {
+            logo
+            name
+          }
+        }
+      }
+    }
+  }
+`;
+
+export function useConnectionsQuery(
+  options: Omit<Urql.UseQueryArgs<ConnectionsQueryVariables>, "query"> = {}
+) {
+  return Urql.useQuery<ConnectionsQuery>({
+    query: ConnectionsDocument,
+    ...options,
+  });
 }

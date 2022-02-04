@@ -28,7 +28,7 @@ mutation Upload($name: String!, $type: String!) {
 }
 
 #==
-query PipeList {
+query Pipes {
   session {
     currentUser {
       pipes {
@@ -78,4 +78,29 @@ mutation CreatePipe($input: PipeInput!) {
 
 mutation RemovePipe($id: String!) {
   removePipe(input: $id)
+}
+
+query Connections {
+  session {
+    currentUser {
+      connections {
+        ... on PlaidConnection {
+          logo
+          name
+        }
+        ... on BitcoinConnection {
+          logo
+          name
+        }
+        ... on SlackConnection {
+          logo
+          name
+        }
+        ... on TwilioConnection {
+          logo
+          name
+        }
+      }
+    }
+  }
 }
