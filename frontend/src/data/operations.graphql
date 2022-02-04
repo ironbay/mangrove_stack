@@ -109,6 +109,47 @@ query Connections {
   }
 }
 
+query Connection($id: ID!) {
+  connection(id: $id) {
+    ... on PlaidConnection {
+      id
+      name
+      logo
+      accounts {
+        name
+        category
+        subCategory
+        kind
+      }
+    }
+    ... on BitcoinConnection {
+      id
+      name
+      logo
+      account {
+        address
+        kind
+      }
+    }
+    ... on SlackConnection {
+      id
+      name
+      logo
+      team {
+        name
+      }
+    }
+    ... on TwilioConnection {
+      id
+      name
+      logo
+      account {
+        phone
+      }
+    }
+  }
+}
+
 mutation RemoveConnection($id: String!) {
   removeConnection(input: $id) {
     ... on PlaidConnection {

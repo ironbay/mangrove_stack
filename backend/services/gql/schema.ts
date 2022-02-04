@@ -102,6 +102,7 @@ export const typeDefs = gql`
     name: String!
   }
   type Query {
+    connection(id: ID!): Connection!
     debug: Debug!
     pipe(id: ID!): Pipe!
     session: Session!

@@ -178,10 +178,15 @@ export type PlaidConnection = {
 
 export type Query = {
   __typename?: "Query";
+  connection: Connection;
   debug: Debug;
   pipe: Pipe;
   session: Session;
   user: User;
+};
+
+export type QueryConnectionArgs = {
+  id: Scalars["ID"];
 };
 
 export type QueryPipeArgs = {
@@ -452,6 +457,53 @@ export type ConnectionsQuery = {
   };
 };
 
+export type ConnectionQueryVariables = Exact<{
+  id: Scalars["ID"];
+}>;
+
+export type ConnectionQuery = {
+  __typename?: "Query";
+  connection:
+    | {
+        __typename?: "BitcoinConnection";
+        id: string;
+        name: string;
+        logo: string;
+        account: {
+          __typename?: "BitcoinAccount";
+          address: string;
+          kind: string;
+        };
+      }
+    | {
+        __typename?: "PlaidConnection";
+        id: string;
+        name: string;
+        logo: string;
+        accounts: Array<{
+          __typename?: "PlaidAccount";
+          name: string;
+          category: string;
+          subCategory: string;
+          kind: string;
+        }>;
+      }
+    | {
+        __typename?: "SlackConnection";
+        id: string;
+        name: string;
+        logo: string;
+        team: { __typename?: "SlackTeam"; name: string };
+      }
+    | {
+        __typename?: "TwilioConnection";
+        id: string;
+        name: string;
+        logo: string;
+        account: { __typename?: "TwilioAccount"; phone: string };
+      };
+};
+
 export type RemoveConnectionMutationVariables = Exact<{
   id: Scalars["String"];
 }>;
@@ -459,10 +511,10 @@ export type RemoveConnectionMutationVariables = Exact<{
 export type RemoveConnectionMutation = {
   __typename?: "Mutation";
   removeConnection:
-    | { __typename?: "BitcoinConnection"; name: string }
-    | { __typename?: "PlaidConnection"; name: string }
-    | { __typename?: "SlackConnection"; name: string }
-    | { __typename?: "TwilioConnection"; name: string };
+    | { __typename?: "BitcoinConnection"; id: string; name: string }
+    | { __typename?: "PlaidConnection"; id: string; name: string }
+    | { __typename?: "SlackConnection"; id: string; name: string }
+    | { __typename?: "TwilioConnection"; id: string; name: string };
 };
 
 export const TodosDocument = gql`
@@ -641,19 +693,74 @@ export function useConnectionsQuery(
     ...options,
   });
 }
+export const ConnectionDocument = gql`
+  query Connection($id: ID!) {
+    connection(id: $id) {
+      ... on PlaidConnection {
+        id
+        name
+        logo
+        accounts {
+          name
+          category
+          subCategory
+          kind
+        }
+      }
+      ... on BitcoinConnection {
+        id
+        name
+        logo
+        account {
+          address
+          kind
+        }
+      }
+      ... on SlackConnection {
+        id
+        name
+        logo
+        team {
+          name
+        }
+      }
+      ... on TwilioConnection {
+        id
+        name
+        logo
+        account {
+          phone
+        }
+      }
+    }
+  }
+`;
+
+export function useConnectionQuery(
+  options: Omit<Urql.UseQueryArgs<ConnectionQueryVariables>, "query"> = {}
+) {
+  return Urql.useQuery<ConnectionQuery>({
+    query: ConnectionDocument,
+    ...options,
+  });
+}
 export const RemoveConnectionDocument = gql`
   mutation RemoveConnection($id: String!) {
     removeConnection(input: $id) {
       ... on PlaidConnection {
+        id
         name
       }
       ... on BitcoinConnection {
+        id
         name
       }
       ... on SlackConnection {
+        id
         name
       }
       ... on TwilioConnection {
+        id
         name
       }
     }

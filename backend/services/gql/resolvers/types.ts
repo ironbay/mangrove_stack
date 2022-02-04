@@ -182,10 +182,15 @@ export type PlaidConnection = {
 
 export type Query = {
   __typename?: "Query";
+  connection: Connection;
   debug: Debug;
   pipe: Pipe;
   session: Session;
   user: User;
+};
+
+export type QueryConnectionArgs = {
+  id: Scalars["ID"];
 };
 
 export type QueryPipeArgs = {
@@ -772,6 +777,12 @@ export type QueryResolvers<
   ContextType = Context,
   ParentType extends ResolversParentTypes["Query"] = ResolversParentTypes["Query"]
 > = ResolversObject<{
+  connection?: Resolver<
+    ResolversTypes["Connection"],
+    ParentType,
+    ContextType,
+    RequireFields<QueryConnectionArgs, "id">
+  >;
   debug?: Resolver<ResolversTypes["Debug"], ParentType, ContextType>;
   pipe?: Resolver<
     ResolversTypes["Pipe"],

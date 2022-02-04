@@ -2,6 +2,10 @@ type User {
   connections: [Connection!]!
 }
 
+type Query {
+  connection(id: ID!): Connection!
+}
+
 type Mutation {
   removeConnection(input: String!): Connection!
 }
