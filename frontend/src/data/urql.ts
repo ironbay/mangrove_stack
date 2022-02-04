@@ -83,6 +83,7 @@ export type Mutation = {
   createTodo: Todo;
   removePipe: Scalars["ID"];
   removeTodo?: Maybe<Todo>;
+  updatePipe: Pipe;
   upload: Scalars["String"];
 };
 
@@ -100,6 +101,10 @@ export type MutationRemovePipeArgs = {
 
 export type MutationRemoveTodoArgs = {
   id: Scalars["String"];
+};
+
+export type MutationUpdatePipeArgs = {
+  input: PipeInput;
 };
 
 export type MutationUploadArgs = {
@@ -365,6 +370,15 @@ export type PipeListQuery = {
   };
 };
 
+export type UpdatePipeMutationVariables = Exact<{
+  input: PipeInput;
+}>;
+
+export type UpdatePipeMutation = {
+  __typename?: "Mutation";
+  updatePipe: { __typename?: "Pipe"; id: string; name: string };
+};
+
 export type CreatePipeMutationVariables = Exact<{
   input: PipeInput;
 }>;
@@ -480,6 +494,20 @@ export function usePipeListQuery(
   options: Omit<Urql.UseQueryArgs<PipeListQueryVariables>, "query"> = {}
 ) {
   return Urql.useQuery<PipeListQuery>({ query: PipeListDocument, ...options });
+}
+export const UpdatePipeDocument = gql`
+  mutation UpdatePipe($input: PipeInput!) {
+    updatePipe(input: $input) {
+      id
+      name
+    }
+  }
+`;
+
+export function useUpdatePipeMutation() {
+  return Urql.useMutation<UpdatePipeMutation, UpdatePipeMutationVariables>(
+    UpdatePipeDocument
+  );
 }
 export const CreatePipeDocument = gql`
   mutation CreatePipe($input: PipeInput!) {

@@ -87,6 +87,7 @@ export type Mutation = {
   createTodo: Todo;
   removePipe: Scalars["ID"];
   removeTodo?: Maybe<Todo>;
+  updatePipe: Pipe;
   upload: Scalars["String"];
 };
 
@@ -104,6 +105,10 @@ export type MutationRemovePipeArgs = {
 
 export type MutationRemoveTodoArgs = {
   id: Scalars["String"];
+};
+
+export type MutationUpdatePipeArgs = {
+  input: PipeInput;
 };
 
 export type MutationUploadArgs = {
@@ -628,6 +633,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationRemoveTodoArgs, "id">
+  >;
+  updatePipe?: Resolver<
+    ResolversTypes["Pipe"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationUpdatePipeArgs, "input">
   >;
   upload?: Resolver<
     ResolversTypes["String"],

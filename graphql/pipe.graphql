@@ -4,6 +4,7 @@ type Query {
 
 type Mutation {
   createPipe(input: PipeInput!): Pipe!
+  updatePipe(input: PipeInput!): Pipe!
   removePipe(input: String!): ID!
 }
 

@@ -49,6 +49,7 @@ export const typeDefs = gql`
     createTodo(input: CreateTodoInput!): Todo!
     removePipe(input: String!): ID!
     removeTodo(id: String!): Todo
+    updatePipe(input: PipeInput!): Pipe!
     upload(name: String!, type: String!): String!
   }
   type NumberFilter implements Filter {

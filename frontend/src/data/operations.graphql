@@ -62,6 +62,13 @@ query PipeList {
   }
 }
 
+mutation UpdatePipe($input: PipeInput!) {
+  updatePipe(input: $input) {
+    id
+    name
+  }
+}
+
 mutation CreatePipe($input: PipeInput!) {
   createPipe(input: $input) {
     id
