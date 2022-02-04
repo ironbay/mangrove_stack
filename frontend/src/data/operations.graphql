@@ -85,22 +85,47 @@ query Connections {
     currentUser {
       connections {
         ... on PlaidConnection {
+          id
           logo
           name
         }
         ... on BitcoinConnection {
+          id
           logo
           name
         }
         ... on SlackConnection {
+          id
           logo
           name
         }
         ... on TwilioConnection {
+          id
           logo
           name
         }
       }
+    }
+  }
+}
+
+mutation RemoveConnection($id: String!) {
+  removeConnection(input: $id) {
+    ... on PlaidConnection {
+      id
+      name
+    }
+    ... on BitcoinConnection {
+      id
+      name
+    }
+    ... on SlackConnection {
+      id
+      name
+    }
+    ... on TwilioConnection {
+      id
+      name
     }
   }
 }

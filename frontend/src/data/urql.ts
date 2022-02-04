@@ -31,6 +31,7 @@ export type BitcoinAccount = {
 export type BitcoinConnection = {
   __typename?: "BitcoinConnection";
   account: BitcoinAccount;
+  id: Scalars["ID"];
   logo: Scalars["String"];
   name: Scalars["String"];
 };
@@ -88,6 +89,7 @@ export type Mutation = {
   __typename?: "Mutation";
   createPipe: Pipe;
   createTodo: Todo;
+  removeConnection: Connection;
   removePipe: Scalars["ID"];
   removeTodo?: Maybe<Todo>;
   updatePipe: Pipe;
@@ -100,6 +102,10 @@ export type MutationCreatePipeArgs = {
 
 export type MutationCreateTodoArgs = {
   input: CreateTodoInput;
+};
+
+export type MutationRemoveConnectionArgs = {
+  input: Scalars["String"];
 };
 
 export type MutationRemovePipeArgs = {
@@ -165,6 +171,7 @@ export type PlaidAccount = {
 export type PlaidConnection = {
   __typename?: "PlaidConnection";
   accounts: Array<PlaidAccount>;
+  id: Scalars["ID"];
   logo: Scalars["String"];
   name: Scalars["String"];
 };
@@ -202,6 +209,7 @@ export type SlackChannel = {
 export type SlackConnection = {
   __typename?: "SlackConnection";
   channels: Array<SlackChannel>;
+  id: Scalars["ID"];
   logo: Scalars["String"];
   name: Scalars["String"];
   team: SlackTeam;
@@ -275,6 +283,7 @@ export type TwilioAccount = {
 export type TwilioConnection = {
   __typename?: "TwilioConnection";
   account: TwilioAccount;
+  id: Scalars["ID"];
   logo: Scalars["String"];
   name: Scalars["String"];
 };
@@ -414,13 +423,46 @@ export type ConnectionsQuery = {
     currentUser: {
       __typename?: "User";
       connections: Array<
-        | { __typename?: "BitcoinConnection"; logo: string; name: string }
-        | { __typename?: "PlaidConnection"; logo: string; name: string }
-        | { __typename?: "SlackConnection"; logo: string; name: string }
-        | { __typename?: "TwilioConnection"; logo: string; name: string }
+        | {
+            __typename?: "BitcoinConnection";
+            id: string;
+            logo: string;
+            name: string;
+          }
+        | {
+            __typename?: "PlaidConnection";
+            id: string;
+            logo: string;
+            name: string;
+          }
+        | {
+            __typename?: "SlackConnection";
+            id: string;
+            logo: string;
+            name: string;
+          }
+        | {
+            __typename?: "TwilioConnection";
+            id: string;
+            logo: string;
+            name: string;
+          }
       >;
     };
   };
+};
+
+export type RemoveConnectionMutationVariables = Exact<{
+  id: Scalars["String"];
+}>;
+
+export type RemoveConnectionMutation = {
+  __typename?: "Mutation";
+  removeConnection:
+    | { __typename?: "BitcoinConnection"; name: string }
+    | { __typename?: "PlaidConnection"; name: string }
+    | { __typename?: "SlackConnection"; name: string }
+    | { __typename?: "TwilioConnection"; name: string };
 };
 
 export const TodosDocument = gql`
@@ -566,18 +608,22 @@ export const ConnectionsDocument = gql`
       currentUser {
         connections {
           ... on PlaidConnection {
+            id
             logo
             name
           }
           ... on BitcoinConnection {
+            id
             logo
             name
           }
           ... on SlackConnection {
+            id
             logo
             name
           }
           ... on TwilioConnection {
+            id
             logo
             name
           }
@@ -594,4 +640,29 @@ export function useConnectionsQuery(
     query: ConnectionsDocument,
     ...options,
   });
+}
+export const RemoveConnectionDocument = gql`
+  mutation RemoveConnection($id: String!) {
+    removeConnection(input: $id) {
+      ... on PlaidConnection {
+        name
+      }
+      ... on BitcoinConnection {
+        name
+      }
+      ... on SlackConnection {
+        name
+      }
+      ... on TwilioConnection {
+        name
+      }
+    }
+  }
+`;
+
+export function useRemoveConnectionMutation() {
+  return Urql.useMutation<
+    RemoveConnectionMutation,
+    RemoveConnectionMutationVariables
+  >(RemoveConnectionDocument);
 }

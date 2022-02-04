@@ -11,6 +11,7 @@ export const typeDefs = gql`
   }
   type BitcoinConnection {
     account: BitcoinAccount!
+    id: ID!
     logo: String!
     name: String!
   }
@@ -53,6 +54,7 @@ export const typeDefs = gql`
   type Mutation {
     createPipe(input: PipeInput!): Pipe!
     createTodo(input: CreateTodoInput!): Todo!
+    removeConnection(input: String!): Connection!
     removePipe(input: String!): ID!
     removeTodo(id: String!): Todo
     updatePipe(input: PipeInput!): Pipe!
@@ -95,6 +97,7 @@ export const typeDefs = gql`
   }
   type PlaidConnection {
     accounts: [PlaidAccount!]!
+    id: ID!
     logo: String!
     name: String!
   }
@@ -116,6 +119,7 @@ export const typeDefs = gql`
   }
   type SlackConnection {
     channels: [SlackChannel!]!
+    id: ID!
     logo: String!
     name: String!
     team: SlackTeam!
@@ -171,6 +175,7 @@ export const typeDefs = gql`
   }
   type TwilioConnection {
     account: TwilioAccount!
+    id: ID!
     logo: String!
     name: String!
   }

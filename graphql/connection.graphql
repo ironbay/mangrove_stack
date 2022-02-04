@@ -2,6 +2,10 @@ type User {
   connections: [Connection!]!
 }
 
+type Mutation {
+  removeConnection(input: String!): Connection!
+}
+
 union Connection =
     PlaidConnection
   | BitcoinConnection
@@ -9,6 +13,7 @@ union Connection =
   | TwilioConnection
 
 type PlaidConnection {
+  id: ID!
   accounts: [PlaidAccount!]!
   logo: String!
   name: String!
@@ -24,6 +29,7 @@ type PlaidAccount {
 }
 
 type BitcoinConnection {
+  id: ID!
   account: BitcoinAccount!
   logo: String!
   name: String!
@@ -36,6 +42,7 @@ type BitcoinAccount {
 }
 
 type SlackConnection {
+  id: ID!
   team: SlackTeam!
   channels: [SlackChannel!]!
   logo: String!
@@ -57,6 +64,7 @@ type SlackChannel {
 }
 
 type TwilioConnection {
+  id: ID!
   account: TwilioAccount!
   logo: String!
   name: String!

@@ -35,6 +35,7 @@ export type BitcoinAccount = {
 export type BitcoinConnection = {
   __typename?: "BitcoinConnection";
   account: BitcoinAccount;
+  id: Scalars["ID"];
   logo: Scalars["String"];
   name: Scalars["String"];
 };
@@ -92,6 +93,7 @@ export type Mutation = {
   __typename?: "Mutation";
   createPipe: Pipe;
   createTodo: Todo;
+  removeConnection: Connection;
   removePipe: Scalars["ID"];
   removeTodo?: Maybe<Todo>;
   updatePipe: Pipe;
@@ -104,6 +106,10 @@ export type MutationCreatePipeArgs = {
 
 export type MutationCreateTodoArgs = {
   input: CreateTodoInput;
+};
+
+export type MutationRemoveConnectionArgs = {
+  input: Scalars["String"];
 };
 
 export type MutationRemovePipeArgs = {
@@ -169,6 +175,7 @@ export type PlaidAccount = {
 export type PlaidConnection = {
   __typename?: "PlaidConnection";
   accounts: Array<PlaidAccount>;
+  id: Scalars["ID"];
   logo: Scalars["String"];
   name: Scalars["String"];
 };
@@ -206,6 +213,7 @@ export type SlackChannel = {
 export type SlackConnection = {
   __typename?: "SlackConnection";
   channels: Array<SlackChannel>;
+  id: Scalars["ID"];
   logo: Scalars["String"];
   name: Scalars["String"];
   team: SlackTeam;
@@ -279,6 +287,7 @@ export type TwilioAccount = {
 export type TwilioConnection = {
   __typename?: "TwilioConnection";
   account: TwilioAccount;
+  id: Scalars["ID"];
   logo: Scalars["String"];
   name: Scalars["String"];
 };
@@ -574,6 +583,7 @@ export type BitcoinConnectionResolvers<
   ParentType extends ResolversParentTypes["BitcoinConnection"] = ResolversParentTypes["BitcoinConnection"]
 > = ResolversObject<{
   account?: Resolver<ResolversTypes["BitcoinAccount"], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
   logo?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -667,6 +677,12 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationCreateTodoArgs, "input">
   >;
+  removeConnection?: Resolver<
+    ResolversTypes["Connection"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationRemoveConnectionArgs, "input">
+  >;
   removePipe?: Resolver<
     ResolversTypes["ID"],
     ParentType,
@@ -746,6 +762,7 @@ export type PlaidConnectionResolvers<
     ParentType,
     ContextType
   >;
+  id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
   logo?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -804,6 +821,7 @@ export type SlackConnectionResolvers<
     ParentType,
     ContextType
   >;
+  id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
   logo?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   team?: Resolver<ResolversTypes["SlackTeam"], ParentType, ContextType>;
@@ -890,6 +908,7 @@ export type TwilioConnectionResolvers<
   ParentType extends ResolversParentTypes["TwilioConnection"] = ResolversParentTypes["TwilioConnection"]
 > = ResolversObject<{
   account?: Resolver<ResolversTypes["TwilioAccount"], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
   logo?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
