@@ -29,6 +29,7 @@ export type BitcoinAccount = {
   __typename?: "BitcoinAccount";
   address: Scalars["String"];
   connection: BitcoinConnection;
+  id: Scalars["ID"];
   kind: Scalars["String"];
 };
 
@@ -282,19 +283,12 @@ export type Todo = {
   title: Scalars["String"];
 };
 
-export type TwilioAccount = {
-  __typename?: "TwilioAccount";
-  connection: TwilioConnection;
-  id: Scalars["ID"];
-  phone: Scalars["String"];
-};
-
 export type TwilioConnection = {
   __typename?: "TwilioConnection";
-  account: TwilioAccount;
   id: Scalars["ID"];
   logo: Scalars["String"];
   name: Scalars["String"];
+  phone: TwilioPhone;
 };
 
 export type TwilioDestination = {
@@ -309,6 +303,12 @@ export type TwilioDestinationInput = {
   id: Scalars["ID"];
   kind: Scalars["String"];
   phone: Scalars["String"];
+};
+
+export type TwilioPhone = {
+  __typename?: "TwilioPhone";
+  format: Scalars["String"];
+  raw: Scalars["String"];
 };
 
 export type User = {
@@ -486,12 +486,12 @@ export type ResolversTypes = ResolversObject<{
   StringFilter: ResolverTypeWrapper<DeepPartial<StringFilter>>;
   StringFilterInput: ResolverTypeWrapper<DeepPartial<StringFilterInput>>;
   Todo: ResolverTypeWrapper<DeepPartial<Todo>>;
-  TwilioAccount: ResolverTypeWrapper<DeepPartial<TwilioAccount>>;
   TwilioConnection: ResolverTypeWrapper<DeepPartial<TwilioConnection>>;
   TwilioDestination: ResolverTypeWrapper<DeepPartial<TwilioDestination>>;
   TwilioDestinationInput: ResolverTypeWrapper<
     DeepPartial<TwilioDestinationInput>
   >;
+  TwilioPhone: ResolverTypeWrapper<DeepPartial<TwilioPhone>>;
   User: ResolverTypeWrapper<
     DeepPartial<
       Omit<User, "connections"> & {
@@ -558,10 +558,10 @@ export type ResolversParentTypes = ResolversObject<{
   StringFilter: DeepPartial<StringFilter>;
   StringFilterInput: DeepPartial<StringFilterInput>;
   Todo: DeepPartial<Todo>;
-  TwilioAccount: DeepPartial<TwilioAccount>;
   TwilioConnection: DeepPartial<TwilioConnection>;
   TwilioDestination: DeepPartial<TwilioDestination>;
   TwilioDestinationInput: DeepPartial<TwilioDestinationInput>;
+  TwilioPhone: DeepPartial<TwilioPhone>;
   User: DeepPartial<
     Omit<User, "connections"> & {
       connections: Array<ResolversParentTypes["Connection"]>;
@@ -579,6 +579,7 @@ export type BitcoinAccountResolvers<
     ParentType,
     ContextType
   >;
+  id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
   kind?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
@@ -900,28 +901,14 @@ export type TodoResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
-export type TwilioAccountResolvers<
-  ContextType = Context,
-  ParentType extends ResolversParentTypes["TwilioAccount"] = ResolversParentTypes["TwilioAccount"]
-> = ResolversObject<{
-  connection?: Resolver<
-    ResolversTypes["TwilioConnection"],
-    ParentType,
-    ContextType
-  >;
-  id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
-  phone?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
 export type TwilioConnectionResolvers<
   ContextType = Context,
   ParentType extends ResolversParentTypes["TwilioConnection"] = ResolversParentTypes["TwilioConnection"]
 > = ResolversObject<{
-  account?: Resolver<ResolversTypes["TwilioAccount"], ParentType, ContextType>;
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
   logo?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  phone?: Resolver<ResolversTypes["TwilioPhone"], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -936,6 +923,15 @@ export type TwilioDestinationResolvers<
   >;
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
   phone?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type TwilioPhoneResolvers<
+  ContextType = Context,
+  ParentType extends ResolversParentTypes["TwilioPhone"] = ResolversParentTypes["TwilioPhone"]
+> = ResolversObject<{
+  format?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  raw?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -978,8 +974,8 @@ export type Resolvers<ContextType = Context> = ResolversObject<{
   SourceAccount?: SourceAccountResolvers<ContextType>;
   StringFilter?: StringFilterResolvers<ContextType>;
   Todo?: TodoResolvers<ContextType>;
-  TwilioAccount?: TwilioAccountResolvers<ContextType>;
   TwilioConnection?: TwilioConnectionResolvers<ContextType>;
   TwilioDestination?: TwilioDestinationResolvers<ContextType>;
+  TwilioPhone?: TwilioPhoneResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
 }>;

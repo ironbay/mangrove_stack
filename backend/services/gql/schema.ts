@@ -7,6 +7,7 @@ export const typeDefs = gql`
   type BitcoinAccount {
     address: String!
     connection: BitcoinConnection!
+    id: ID!
     kind: String!
   }
   type BitcoinConnection {
@@ -169,16 +170,11 @@ export const typeDefs = gql`
     id: ID!
     title: String!
   }
-  type TwilioAccount {
-    connection: TwilioConnection!
-    id: ID!
-    phone: String!
-  }
   type TwilioConnection {
-    account: TwilioAccount!
     id: ID!
     logo: String!
     name: String!
+    phone: TwilioPhone!
   }
   type TwilioDestination {
     connection: TwilioConnection!
@@ -190,6 +186,10 @@ export const typeDefs = gql`
     id: ID!
     kind: String!
     phone: String!
+  }
+  type TwilioPhone {
+    format: String!
+    raw: String!
   }
   type User {
     connections: [Connection!]!

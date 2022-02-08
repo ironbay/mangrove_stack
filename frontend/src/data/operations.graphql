@@ -28,6 +28,29 @@ mutation Upload($name: String!, $type: String!) {
 }
 
 #==
+
+query Pipe($id: ID!) {
+  pipe(id: $id) {
+    sources {
+      id
+      account {
+        ... on PlaidAccount {
+          id
+          name
+          kind
+          category
+          subCategory
+        }
+        ... on BitcoinAccount {
+          id
+          address
+          kind
+        }
+      }
+    }
+  }
+}
+
 query Pipes {
   session {
     currentUser {

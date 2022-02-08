@@ -40,6 +40,7 @@ type BitcoinConnection {
 }
 
 type BitcoinAccount {
+  id: ID!
   address: String!
   kind: String!
   connection: BitcoinConnection!

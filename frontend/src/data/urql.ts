@@ -25,6 +25,7 @@ export type BitcoinAccount = {
   __typename?: "BitcoinAccount";
   address: Scalars["String"];
   connection: BitcoinConnection;
+  id: Scalars["ID"];
   kind: Scalars["String"];
 };
 
@@ -278,19 +279,12 @@ export type Todo = {
   title: Scalars["String"];
 };
 
-export type TwilioAccount = {
-  __typename?: "TwilioAccount";
-  connection: TwilioConnection;
-  id: Scalars["ID"];
-  phone: Scalars["String"];
-};
-
 export type TwilioConnection = {
   __typename?: "TwilioConnection";
-  account: TwilioAccount;
   id: Scalars["ID"];
   logo: Scalars["String"];
   name: Scalars["String"];
+  phone: TwilioPhone;
 };
 
 export type TwilioDestination = {
@@ -305,6 +299,12 @@ export type TwilioDestinationInput = {
   id: Scalars["ID"];
   kind: Scalars["String"];
   phone: Scalars["String"];
+};
+
+export type TwilioPhone = {
+  __typename?: "TwilioPhone";
+  format: Scalars["String"];
+  raw: Scalars["String"];
 };
 
 export type User = {
@@ -356,6 +356,36 @@ export type UploadMutationVariables = Exact<{
 }>;
 
 export type UploadMutation = { __typename?: "Mutation"; upload: string };
+
+export type PipeQueryVariables = Exact<{
+  id: Scalars["ID"];
+}>;
+
+export type PipeQuery = {
+  __typename?: "Query";
+  pipe: {
+    __typename?: "Pipe";
+    sources: Array<{
+      __typename?: "Source";
+      id: string;
+      account:
+        | {
+            __typename?: "BitcoinAccount";
+            id: string;
+            address: string;
+            kind: string;
+          }
+        | {
+            __typename?: "PlaidAccount";
+            id: string;
+            name: string;
+            kind: string;
+            category: string;
+            subCategory: string;
+          };
+    }>;
+  };
+};
 
 export type PipesQueryVariables = Exact<{ [key: string]: never }>;
 
@@ -500,7 +530,7 @@ export type ConnectionQuery = {
         id: string;
         name: string;
         logo: string;
-        account: { __typename?: "TwilioAccount"; phone: string };
+        phone: { __typename?: "TwilioPhone"; raw: string; format: string };
       };
 };
 
@@ -573,6 +603,35 @@ export function useUploadMutation() {
   return Urql.useMutation<UploadMutation, UploadMutationVariables>(
     UploadDocument
   );
+}
+export const PipeDocument = gql`
+  query Pipe($id: ID!) {
+    pipe(id: $id) {
+      sources {
+        id
+        account {
+          ... on PlaidAccount {
+            id
+            name
+            kind
+            category
+            subCategory
+          }
+          ... on BitcoinAccount {
+            id
+            address
+            kind
+          }
+        }
+      }
+    }
+  }
+`;
+
+export function usePipeQuery(
+  options: Omit<Urql.UseQueryArgs<PipeQueryVariables>, "query"> = {}
+) {
+  return Urql.useQuery<PipeQuery>({ query: PipeDocument, ...options });
 }
 export const PipesDocument = gql`
   query Pipes {
@@ -728,8 +787,9 @@ export const ConnectionDocument = gql`
         id
         name
         logo
-        account {
-          phone
+        phone {
+          raw
+          format
         }
       }
     }
