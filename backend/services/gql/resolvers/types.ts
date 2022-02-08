@@ -75,6 +75,8 @@ export type FilterInput = {
   string: Array<StringFilterInput>;
 };
 
+export type FilterUnion = NumberFilter | StringFilter;
+
 export type Filters = {
   __typename?: "Filters";
   number: Array<NumberFilter>;
@@ -249,7 +251,7 @@ export type SlackTeam = {
 export type Source = {
   __typename?: "Source";
   account: SourceAccount;
-  filters: Filters;
+  filters: Array<Maybe<FilterUnion>>;
   id: Scalars["ID"];
 };
 
@@ -295,7 +297,7 @@ export type TwilioDestination = {
   __typename?: "TwilioDestination";
   connection: TwilioConnection;
   id: Scalars["ID"];
-  phone: Scalars["String"];
+  phone: TwilioPhone;
 };
 
 export type TwilioDestinationInput = {
@@ -446,6 +448,9 @@ export type ResolversTypes = ResolversObject<{
   DestinationInput: ResolverTypeWrapper<DeepPartial<DestinationInput>>;
   Filter: ResolversTypes["NumberFilter"] | ResolversTypes["StringFilter"];
   FilterInput: ResolverTypeWrapper<DeepPartial<FilterInput>>;
+  FilterUnion: DeepPartial<
+    ResolversTypes["NumberFilter"] | ResolversTypes["StringFilter"]
+  >;
   Filters: ResolverTypeWrapper<DeepPartial<Filters>>;
   Flags: ResolverTypeWrapper<DeepPartial<Flags>>;
   FlagsInput: ResolverTypeWrapper<DeepPartial<FlagsInput>>;
@@ -475,7 +480,10 @@ export type ResolversTypes = ResolversObject<{
   SlackTeam: ResolverTypeWrapper<DeepPartial<SlackTeam>>;
   Source: ResolverTypeWrapper<
     DeepPartial<
-      Omit<Source, "account"> & { account: ResolversTypes["SourceAccount"] }
+      Omit<Source, "account" | "filters"> & {
+        account: ResolversTypes["SourceAccount"];
+        filters: Array<Maybe<ResolversTypes["FilterUnion"]>>;
+      }
     >
   >;
   SourceAccount: DeepPartial<
@@ -523,6 +531,9 @@ export type ResolversParentTypes = ResolversObject<{
     | ResolversParentTypes["NumberFilter"]
     | ResolversParentTypes["StringFilter"];
   FilterInput: DeepPartial<FilterInput>;
+  FilterUnion: DeepPartial<
+    ResolversParentTypes["NumberFilter"] | ResolversParentTypes["StringFilter"]
+  >;
   Filters: DeepPartial<Filters>;
   Flags: DeepPartial<Flags>;
   FlagsInput: DeepPartial<FlagsInput>;
@@ -547,7 +558,10 @@ export type ResolversParentTypes = ResolversObject<{
   SlackDestinationInput: DeepPartial<SlackDestinationInput>;
   SlackTeam: DeepPartial<SlackTeam>;
   Source: DeepPartial<
-    Omit<Source, "account"> & { account: ResolversParentTypes["SourceAccount"] }
+    Omit<Source, "account" | "filters"> & {
+      account: ResolversParentTypes["SourceAccount"];
+      filters: Array<Maybe<ResolversParentTypes["FilterUnion"]>>;
+    }
   >;
   SourceAccount: DeepPartial<
     | ResolversParentTypes["BitcoinAccount"]
@@ -640,6 +654,17 @@ export type FilterResolvers<
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
   kind?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   op?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+}>;
+
+export type FilterUnionResolvers<
+  ContextType = Context,
+  ParentType extends ResolversParentTypes["FilterUnion"] = ResolversParentTypes["FilterUnion"]
+> = ResolversObject<{
+  __resolveType: TypeResolveFn<
+    "NumberFilter" | "StringFilter",
+    ParentType,
+    ContextType
+  >;
 }>;
 
 export type FiltersResolvers<
@@ -865,7 +890,11 @@ export type SourceResolvers<
   ParentType extends ResolversParentTypes["Source"] = ResolversParentTypes["Source"]
 > = ResolversObject<{
   account?: Resolver<ResolversTypes["SourceAccount"], ParentType, ContextType>;
-  filters?: Resolver<ResolversTypes["Filters"], ParentType, ContextType>;
+  filters?: Resolver<
+    Array<Maybe<ResolversTypes["FilterUnion"]>>,
+    ParentType,
+    ContextType
+  >;
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
@@ -922,7 +951,7 @@ export type TwilioDestinationResolvers<
     ContextType
   >;
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
-  phone?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  phone?: Resolver<ResolversTypes["TwilioPhone"], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -957,6 +986,7 @@ export type Resolvers<ContextType = Context> = ResolversObject<{
   Debug?: DebugResolvers<ContextType>;
   Destination?: DestinationResolvers<ContextType>;
   Filter?: FilterResolvers<ContextType>;
+  FilterUnion?: FilterUnionResolvers<ContextType>;
   Filters?: FiltersResolvers<ContextType>;
   Flags?: FlagsResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;

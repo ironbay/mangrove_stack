@@ -47,6 +47,43 @@ query Pipe($id: ID!) {
           kind
         }
       }
+      filters {
+        ... on NumberFilter {
+          id
+          kind
+          op
+          num: value
+        }
+        ... on StringFilter {
+          id
+          kind
+          op
+          text: value
+        }
+      }
+    }
+    destinations {
+      ... on SlackDestination {
+        id
+        team {
+          id
+          name
+          logo
+        }
+        channel {
+          id
+          name
+          topic
+          count_members
+        }
+      }
+      ... on TwilioDestination {
+        id
+        phone {
+          raw
+          format
+        }
+      }
     }
   }
 }

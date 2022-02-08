@@ -42,6 +42,7 @@ export const typeDefs = gql`
     number: [NumberFilterInput]!
     string: [StringFilterInput!]!
   }
+  union FilterUnion = NumberFilter | StringFilter
   type Filters {
     number: [NumberFilter!]!
     string: [StringFilter!]!
@@ -144,7 +145,7 @@ export const typeDefs = gql`
   }
   type Source {
     account: SourceAccount!
-    filters: Filters!
+    filters: [FilterUnion]!
     id: ID!
   }
   union SourceAccount = BitcoinAccount | PlaidAccount
@@ -179,7 +180,7 @@ export const typeDefs = gql`
   type TwilioDestination {
     connection: TwilioConnection!
     id: ID!
-    phone: String!
+    phone: TwilioPhone!
   }
   input TwilioDestinationInput {
     connection: String!

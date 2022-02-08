@@ -27,10 +27,12 @@ type Flags {
 type Source {
   id: ID!
   account: SourceAccount!
-  filters: Filters!
+  filters: [FilterUnion]!
 }
 
 union SourceAccount = PlaidAccount | BitcoinAccount
+
+union FilterUnion = NumberFilter | StringFilter
 
 type Filters {
   number: [NumberFilter!]!
@@ -67,7 +69,7 @@ type SlackDestination {
 
 type TwilioDestination {
   id: ID!
-  phone: String!
+  phone: TwilioPhone!
   connection: TwilioConnection!
 }
 

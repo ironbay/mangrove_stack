@@ -71,6 +71,8 @@ export type FilterInput = {
   string: Array<StringFilterInput>;
 };
 
+export type FilterUnion = NumberFilter | StringFilter;
+
 export type Filters = {
   __typename?: "Filters";
   number: Array<NumberFilter>;
@@ -245,7 +247,7 @@ export type SlackTeam = {
 export type Source = {
   __typename?: "Source";
   account: SourceAccount;
-  filters: Filters;
+  filters: Array<Maybe<FilterUnion>>;
   id: Scalars["ID"];
 };
 
@@ -291,7 +293,7 @@ export type TwilioDestination = {
   __typename?: "TwilioDestination";
   connection: TwilioConnection;
   id: Scalars["ID"];
-  phone: Scalars["String"];
+  phone: TwilioPhone;
 };
 
 export type TwilioDestinationInput = {
@@ -383,7 +385,49 @@ export type PipeQuery = {
             category: string;
             subCategory: string;
           };
+      filters: Array<
+        | {
+            __typename?: "NumberFilter";
+            id: string;
+            kind: string;
+            op: string;
+            num: number;
+          }
+        | {
+            __typename?: "StringFilter";
+            id: string;
+            kind: string;
+            op: string;
+            text: string;
+          }
+        | null
+        | undefined
+      >;
     }>;
+    destinations: Array<
+      | {
+          __typename?: "SlackDestination";
+          id: string;
+          team: {
+            __typename?: "SlackTeam";
+            id: string;
+            name: string;
+            logo: string;
+          };
+          channel: {
+            __typename?: "SlackChannel";
+            id: string;
+            name: string;
+            topic: string;
+            count_members: number;
+          };
+        }
+      | {
+          __typename?: "TwilioDestination";
+          id: string;
+          phone: { __typename?: "TwilioPhone"; raw: string; format: string };
+        }
+    >;
   };
 };
 
@@ -621,6 +665,43 @@ export const PipeDocument = gql`
             id
             address
             kind
+          }
+        }
+        filters {
+          ... on NumberFilter {
+            id
+            kind
+            op
+            num: value
+          }
+          ... on StringFilter {
+            id
+            kind
+            op
+            text: value
+          }
+        }
+      }
+      destinations {
+        ... on SlackDestination {
+          id
+          team {
+            id
+            name
+            logo
+          }
+          channel {
+            id
+            name
+            topic
+            count_members
+          }
+        }
+        ... on TwilioDestination {
+          id
+          phone {
+            raw
+            format
           }
         }
       }
