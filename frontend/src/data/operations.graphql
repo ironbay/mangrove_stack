@@ -143,8 +143,9 @@ query Connection($id: ID!) {
       id
       name
       logo
-      account {
-        phone
+      phone {
+        raw
+        format
       }
     }
   }

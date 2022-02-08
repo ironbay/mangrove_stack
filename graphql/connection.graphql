@@ -69,13 +69,12 @@ type SlackChannel {
 
 type TwilioConnection {
   id: ID!
-  account: TwilioAccount!
+  phone: TwilioPhone!
   logo: String!
   name: String!
 }
 
-type TwilioAccount {
-  id: ID!
-  phone: String!
-  connection: TwilioConnection!
+type TwilioPhone {
+  raw: String!
+  format: String!
 }
