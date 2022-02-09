@@ -183,11 +183,17 @@ export type PlaidConnection = {
   name: Scalars["String"];
 };
 
+export type PlaidLink = {
+  __typename?: "PlaidLink";
+  link: Scalars["String"];
+};
+
 export type Query = {
   __typename?: "Query";
   connection: Connection;
   debug: Debug;
   pipe: Pipe;
+  plaid_link: PlaidLink;
   session: Session;
   user: User;
 };
@@ -198,6 +204,10 @@ export type QueryConnectionArgs = {
 
 export type QueryPipeArgs = {
   id: Scalars["ID"];
+};
+
+export type QueryPlaid_LinkArgs = {
+  user: Scalars["ID"];
 };
 
 export type QueryUserArgs = {
@@ -469,6 +479,7 @@ export type ResolversTypes = ResolversObject<{
   PipeInput: ResolverTypeWrapper<DeepPartial<PipeInput>>;
   PlaidAccount: ResolverTypeWrapper<DeepPartial<PlaidAccount>>;
   PlaidConnection: ResolverTypeWrapper<DeepPartial<PlaidConnection>>;
+  PlaidLink: ResolverTypeWrapper<DeepPartial<PlaidLink>>;
   Query: ResolverTypeWrapper<{}>;
   Session: ResolverTypeWrapper<DeepPartial<Session>>;
   SlackChannel: ResolverTypeWrapper<DeepPartial<SlackChannel>>;
@@ -550,6 +561,7 @@ export type ResolversParentTypes = ResolversObject<{
   PipeInput: DeepPartial<PipeInput>;
   PlaidAccount: DeepPartial<PlaidAccount>;
   PlaidConnection: DeepPartial<PlaidConnection>;
+  PlaidLink: DeepPartial<PlaidLink>;
   Query: {};
   Session: DeepPartial<Session>;
   SlackChannel: DeepPartial<SlackChannel>;
@@ -799,6 +811,14 @@ export type PlaidConnectionResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type PlaidLinkResolvers<
+  ContextType = Context,
+  ParentType extends ResolversParentTypes["PlaidLink"] = ResolversParentTypes["PlaidLink"]
+> = ResolversObject<{
+  link?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type QueryResolvers<
   ContextType = Context,
   ParentType extends ResolversParentTypes["Query"] = ResolversParentTypes["Query"]
@@ -815,6 +835,12 @@ export type QueryResolvers<
     ParentType,
     ContextType,
     RequireFields<QueryPipeArgs, "id">
+  >;
+  plaid_link?: Resolver<
+    ResolversTypes["PlaidLink"],
+    ParentType,
+    ContextType,
+    RequireFields<QueryPlaid_LinkArgs, "user">
   >;
   session?: Resolver<ResolversTypes["Session"], ParentType, ContextType>;
   user?: Resolver<
@@ -994,6 +1020,7 @@ export type Resolvers<ContextType = Context> = ResolversObject<{
   Pipe?: PipeResolvers<ContextType>;
   PlaidAccount?: PlaidAccountResolvers<ContextType>;
   PlaidConnection?: PlaidConnectionResolvers<ContextType>;
+  PlaidLink?: PlaidLinkResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Session?: SessionResolvers<ContextType>;
   SlackChannel?: SlackChannelResolvers<ContextType>;

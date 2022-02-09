@@ -211,6 +211,12 @@ query Connection($id: ID!) {
   }
 }
 
+query PlaidLink($user_id: ID!) {
+  plaid_link(user: $user_id) {
+    link
+  }
+}
+
 mutation RemoveConnection($id: String!) {
   removeConnection(input: $id) {
     ... on PlaidConnection {
