@@ -179,11 +179,17 @@ export type PlaidConnection = {
   name: Scalars["String"];
 };
 
+export type PlaidLink = {
+  __typename?: "PlaidLink";
+  link: Scalars["String"];
+};
+
 export type Query = {
   __typename?: "Query";
   connection: Connection;
   debug: Debug;
   pipe: Pipe;
+  plaid_link: PlaidLink;
   session: Session;
   user: User;
 };
@@ -194,6 +200,10 @@ export type QueryConnectionArgs = {
 
 export type QueryPipeArgs = {
   id: Scalars["ID"];
+};
+
+export type QueryPlaid_LinkArgs = {
+  user: Scalars["ID"];
 };
 
 export type QueryUserArgs = {
@@ -578,6 +588,15 @@ export type ConnectionQuery = {
       };
 };
 
+export type PlaidLinkQueryVariables = Exact<{
+  user_id: Scalars["ID"];
+}>;
+
+export type PlaidLinkQuery = {
+  __typename?: "Query";
+  plaid_link: { __typename?: "PlaidLink"; link: string };
+};
+
 export type RemoveConnectionMutationVariables = Exact<{
   id: Scalars["String"];
 }>;
@@ -882,6 +901,22 @@ export function useConnectionQuery(
 ) {
   return Urql.useQuery<ConnectionQuery>({
     query: ConnectionDocument,
+    ...options,
+  });
+}
+export const PlaidLinkDocument = gql`
+  query PlaidLink($user_id: ID!) {
+    plaid_link(user: $user_id) {
+      link
+    }
+  }
+`;
+
+export function usePlaidLinkQuery(
+  options: Omit<Urql.UseQueryArgs<PlaidLinkQueryVariables>, "query"> = {}
+) {
+  return Urql.useQuery<PlaidLinkQuery>({
+    query: PlaidLinkDocument,
     ...options,
   });
 }

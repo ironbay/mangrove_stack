@@ -103,10 +103,14 @@ export const typeDefs = gql`
     logo: String!
     name: String!
   }
+  type PlaidLink {
+    link: String!
+  }
   type Query {
     connection(id: ID!): Connection!
     debug: Debug!
     pipe(id: ID!): Pipe!
+    plaid_link(user: ID!): PlaidLink!
     session: Session!
     user(id: ID!): User!
   }

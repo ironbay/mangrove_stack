@@ -4,6 +4,7 @@ type User {
 
 type Query {
   connection(id: ID!): Connection!
+  plaid_link(user: ID!): PlaidLink!
 }
 
 type Mutation {
@@ -15,6 +16,10 @@ union Connection =
   | BitcoinConnection
   | SlackConnection
   | TwilioConnection
+
+type PlaidLink {
+  link: String!
+}
 
 type PlaidConnection {
   id: ID!
