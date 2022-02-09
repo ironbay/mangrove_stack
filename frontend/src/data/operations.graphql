@@ -211,8 +211,13 @@ query Connection($id: ID!) {
   }
 }
 
-query PlaidLink($user_id: ID!) {
-  plaid_link(user: $user_id) {
+query PlaidLink($user: ID!) {
+  plaid_link(user: $user) {
+    link
+  }
+}
+query SlackLink($user: ID!) {
+  plaid_link(user: $user) {
     link
   }
 }

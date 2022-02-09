@@ -191,6 +191,7 @@ export type Query = {
   pipe: Pipe;
   plaid_link: PlaidLink;
   session: Session;
+  slack_link: SlackLink;
   user: User;
 };
 
@@ -203,6 +204,10 @@ export type QueryPipeArgs = {
 };
 
 export type QueryPlaid_LinkArgs = {
+  user: Scalars["ID"];
+};
+
+export type QuerySlack_LinkArgs = {
   user: Scalars["ID"];
 };
 
@@ -245,6 +250,11 @@ export type SlackDestinationInput = {
   connection: Scalars["String"];
   id: Scalars["ID"];
   kind: Scalars["String"];
+};
+
+export type SlackLink = {
+  __typename?: "SlackLink";
+  link: Scalars["String"];
 };
 
 export type SlackTeam = {
@@ -589,10 +599,19 @@ export type ConnectionQuery = {
 };
 
 export type PlaidLinkQueryVariables = Exact<{
-  user_id: Scalars["ID"];
+  user: Scalars["ID"];
 }>;
 
 export type PlaidLinkQuery = {
+  __typename?: "Query";
+  plaid_link: { __typename?: "PlaidLink"; link: string };
+};
+
+export type SlackLinkQueryVariables = Exact<{
+  user: Scalars["ID"];
+}>;
+
+export type SlackLinkQuery = {
   __typename?: "Query";
   plaid_link: { __typename?: "PlaidLink"; link: string };
 };
@@ -905,8 +924,8 @@ export function useConnectionQuery(
   });
 }
 export const PlaidLinkDocument = gql`
-  query PlaidLink($user_id: ID!) {
-    plaid_link(user: $user_id) {
+  query PlaidLink($user: ID!) {
+    plaid_link(user: $user) {
       link
     }
   }
@@ -917,6 +936,22 @@ export function usePlaidLinkQuery(
 ) {
   return Urql.useQuery<PlaidLinkQuery>({
     query: PlaidLinkDocument,
+    ...options,
+  });
+}
+export const SlackLinkDocument = gql`
+  query SlackLink($user: ID!) {
+    plaid_link(user: $user) {
+      link
+    }
+  }
+`;
+
+export function useSlackLinkQuery(
+  options: Omit<Urql.UseQueryArgs<SlackLinkQueryVariables>, "query"> = {}
+) {
+  return Urql.useQuery<SlackLinkQuery>({
+    query: SlackLinkDocument,
     ...options,
   });
 }

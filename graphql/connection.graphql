@@ -5,6 +5,7 @@ type User {
 type Query {
   connection(id: ID!): Connection!
   plaid_link(user: ID!): PlaidLink!
+  slack_link(user: ID!): SlackLink!
 }
 
 type Mutation {
@@ -18,6 +19,10 @@ union Connection =
   | TwilioConnection
 
 type PlaidLink {
+  link: String!
+}
+
+type SlackLink {
   link: String!
 }
 

@@ -112,6 +112,7 @@ export const typeDefs = gql`
     pipe(id: ID!): Pipe!
     plaid_link(user: ID!): PlaidLink!
     session: Session!
+    slack_link(user: ID!): SlackLink!
     user(id: ID!): User!
   }
   type Session {
@@ -141,6 +142,9 @@ export const typeDefs = gql`
     connection: String!
     id: ID!
     kind: String!
+  }
+  type SlackLink {
+    link: String!
   }
   type SlackTeam {
     id: ID!

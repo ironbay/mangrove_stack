@@ -195,6 +195,7 @@ export type Query = {
   pipe: Pipe;
   plaid_link: PlaidLink;
   session: Session;
+  slack_link: SlackLink;
   user: User;
 };
 
@@ -207,6 +208,10 @@ export type QueryPipeArgs = {
 };
 
 export type QueryPlaid_LinkArgs = {
+  user: Scalars["ID"];
+};
+
+export type QuerySlack_LinkArgs = {
   user: Scalars["ID"];
 };
 
@@ -249,6 +254,11 @@ export type SlackDestinationInput = {
   connection: Scalars["String"];
   id: Scalars["ID"];
   kind: Scalars["String"];
+};
+
+export type SlackLink = {
+  __typename?: "SlackLink";
+  link: Scalars["String"];
 };
 
 export type SlackTeam = {
@@ -488,6 +498,7 @@ export type ResolversTypes = ResolversObject<{
   SlackDestinationInput: ResolverTypeWrapper<
     DeepPartial<SlackDestinationInput>
   >;
+  SlackLink: ResolverTypeWrapper<DeepPartial<SlackLink>>;
   SlackTeam: ResolverTypeWrapper<DeepPartial<SlackTeam>>;
   Source: ResolverTypeWrapper<
     DeepPartial<
@@ -568,6 +579,7 @@ export type ResolversParentTypes = ResolversObject<{
   SlackConnection: DeepPartial<SlackConnection>;
   SlackDestination: DeepPartial<SlackDestination>;
   SlackDestinationInput: DeepPartial<SlackDestinationInput>;
+  SlackLink: DeepPartial<SlackLink>;
   SlackTeam: DeepPartial<SlackTeam>;
   Source: DeepPartial<
     Omit<Source, "account" | "filters"> & {
@@ -843,6 +855,12 @@ export type QueryResolvers<
     RequireFields<QueryPlaid_LinkArgs, "user">
   >;
   session?: Resolver<ResolversTypes["Session"], ParentType, ContextType>;
+  slack_link?: Resolver<
+    ResolversTypes["SlackLink"],
+    ParentType,
+    ContextType,
+    RequireFields<QuerySlack_LinkArgs, "user">
+  >;
   user?: Resolver<
     ResolversTypes["User"],
     ParentType,
@@ -898,6 +916,14 @@ export type SlackDestinationResolvers<
   channel?: Resolver<ResolversTypes["SlackChannel"], ParentType, ContextType>;
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
   team?: Resolver<ResolversTypes["SlackTeam"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type SlackLinkResolvers<
+  ContextType = Context,
+  ParentType extends ResolversParentTypes["SlackLink"] = ResolversParentTypes["SlackLink"]
+> = ResolversObject<{
+  link?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -1026,6 +1052,7 @@ export type Resolvers<ContextType = Context> = ResolversObject<{
   SlackChannel?: SlackChannelResolvers<ContextType>;
   SlackConnection?: SlackConnectionResolvers<ContextType>;
   SlackDestination?: SlackDestinationResolvers<ContextType>;
+  SlackLink?: SlackLinkResolvers<ContextType>;
   SlackTeam?: SlackTeamResolvers<ContextType>;
   Source?: SourceResolvers<ContextType>;
   SourceAccount?: SourceAccountResolvers<ContextType>;
