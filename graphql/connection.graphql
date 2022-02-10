@@ -26,11 +26,18 @@ type SlackLink {
   link: String!
 }
 
-type PlaidConnection {
+interface Connection {
+  id: ID!
+  logo: String!
+  pipes: [Pipe!]!
+}
+
+type PlaidConnection implements Connection {
   id: ID!
   accounts: [PlaidAccount!]!
   logo: String!
   name: String!
+  pipes: [Pipe!]!
 }
 
 type PlaidAccount {
@@ -42,11 +49,12 @@ type PlaidAccount {
   connection: PlaidConnection!
 }
 
-type BitcoinConnection {
+type BitcoinConnection implements Connection {
   id: ID!
   account: BitcoinAccount!
   logo: String!
   name: String!
+  pipes: [Pipe!]!
 }
 
 type BitcoinAccount {
@@ -56,12 +64,13 @@ type BitcoinAccount {
   connection: BitcoinConnection!
 }
 
-type SlackConnection {
+type SlackConnection implements Connection {
   id: ID!
   team: SlackTeam!
   channels: [SlackChannel!]!
   logo: String!
   name: String!
+  pipes: [Pipe!]!
 }
 
 type SlackTeam {
@@ -78,11 +87,12 @@ type SlackChannel {
   connection: SlackConnection!
 }
 
-type TwilioConnection {
+type TwilioConnection implements Connection {
   id: ID!
   phone: TwilioPhone!
   logo: String!
   name: String!
+  pipes: [Pipe!]!
 }
 
 type TwilioPhone {

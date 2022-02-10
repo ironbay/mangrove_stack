@@ -29,19 +29,20 @@ export type BitcoinAccount = {
   kind: Scalars["String"];
 };
 
-export type BitcoinConnection = {
+export type BitcoinConnection = Connection & {
   __typename?: "BitcoinConnection";
   account: BitcoinAccount;
   id: Scalars["ID"];
   logo: Scalars["String"];
   name: Scalars["String"];
+  pipes: Array<Pipe>;
 };
 
-export type Connection =
-  | BitcoinConnection
-  | PlaidConnection
-  | SlackConnection
-  | TwilioConnection;
+export type Connection = {
+  id: Scalars["ID"];
+  logo: Scalars["String"];
+  pipes: Array<Pipe>;
+};
 
 export type CreateTodoInput = {
   id: Scalars["String"];
@@ -171,12 +172,13 @@ export type PlaidAccount = {
   subCategory: Scalars["String"];
 };
 
-export type PlaidConnection = {
+export type PlaidConnection = Connection & {
   __typename?: "PlaidConnection";
   accounts: Array<PlaidAccount>;
   id: Scalars["ID"];
   logo: Scalars["String"];
   name: Scalars["String"];
+  pipes: Array<Pipe>;
 };
 
 export type PlaidLink = {
@@ -229,12 +231,13 @@ export type SlackChannel = {
   topic: Scalars["String"];
 };
 
-export type SlackConnection = {
+export type SlackConnection = Connection & {
   __typename?: "SlackConnection";
   channels: Array<SlackChannel>;
   id: Scalars["ID"];
   logo: Scalars["String"];
   name: Scalars["String"];
+  pipes: Array<Pipe>;
   team: SlackTeam;
 };
 
@@ -301,12 +304,13 @@ export type Todo = {
   title: Scalars["String"];
 };
 
-export type TwilioConnection = {
+export type TwilioConnection = Connection & {
   __typename?: "TwilioConnection";
   id: Scalars["ID"];
   logo: Scalars["String"];
   name: Scalars["String"];
   phone: TwilioPhone;
+  pipes: Array<Pipe>;
 };
 
 export type TwilioDestination = {
@@ -527,24 +531,28 @@ export type ConnectionsQuery = {
             id: string;
             logo: string;
             name: string;
+            pipes: Array<{ __typename?: "Pipe"; id: string; name: string }>;
           }
         | {
             __typename?: "PlaidConnection";
             id: string;
             logo: string;
             name: string;
+            pipes: Array<{ __typename?: "Pipe"; id: string; name: string }>;
           }
         | {
             __typename?: "SlackConnection";
             id: string;
             logo: string;
             name: string;
+            pipes: Array<{ __typename?: "Pipe"; id: string; name: string }>;
           }
         | {
             __typename?: "TwilioConnection";
             id: string;
             logo: string;
             name: string;
+            pipes: Array<{ __typename?: "Pipe"; id: string; name: string }>;
           }
       >;
     };
@@ -563,6 +571,7 @@ export type ConnectionQuery = {
         id: string;
         name: string;
         logo: string;
+        pipes: Array<{ __typename?: "Pipe"; id: string; name: string }>;
         account: {
           __typename?: "BitcoinAccount";
           address: string;
@@ -574,6 +583,7 @@ export type ConnectionQuery = {
         id: string;
         name: string;
         logo: string;
+        pipes: Array<{ __typename?: "Pipe"; id: string; name: string }>;
         accounts: Array<{
           __typename?: "PlaidAccount";
           name: string;
@@ -587,6 +597,7 @@ export type ConnectionQuery = {
         id: string;
         name: string;
         logo: string;
+        pipes: Array<{ __typename?: "Pipe"; id: string; name: string }>;
         team: { __typename?: "SlackTeam"; name: string };
       }
     | {
@@ -594,6 +605,7 @@ export type ConnectionQuery = {
         id: string;
         name: string;
         logo: string;
+        pipes: Array<{ __typename?: "Pipe"; id: string; name: string }>;
         phone: { __typename?: "TwilioPhone"; raw: string; format: string };
       };
 };
@@ -841,21 +853,37 @@ export const ConnectionsDocument = gql`
             id
             logo
             name
+            pipes {
+              id
+              name
+            }
           }
           ... on BitcoinConnection {
             id
             logo
             name
+            pipes {
+              id
+              name
+            }
           }
           ... on SlackConnection {
             id
             logo
             name
+            pipes {
+              id
+              name
+            }
           }
           ... on TwilioConnection {
             id
             logo
             name
+            pipes {
+              id
+              name
+            }
           }
         }
       }
@@ -878,6 +906,10 @@ export const ConnectionDocument = gql`
         id
         name
         logo
+        pipes {
+          id
+          name
+        }
         accounts {
           name
           category
@@ -889,6 +921,10 @@ export const ConnectionDocument = gql`
         id
         name
         logo
+        pipes {
+          id
+          name
+        }
         account {
           address
           kind
@@ -898,6 +934,10 @@ export const ConnectionDocument = gql`
         id
         name
         logo
+        pipes {
+          id
+          name
+        }
         team {
           name
         }
@@ -906,6 +946,10 @@ export const ConnectionDocument = gql`
         id
         name
         logo
+        pipes {
+          id
+          name
+        }
         phone {
           raw
           format
