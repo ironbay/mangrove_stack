@@ -148,21 +148,37 @@ query Connections {
           id
           logo
           name
+          pipes {
+            id
+            name
+          }
         }
         ... on BitcoinConnection {
           id
           logo
           name
+          pipes {
+            id
+            name
+          }
         }
         ... on SlackConnection {
           id
           logo
           name
+          pipes {
+            id
+            name
+          }
         }
         ... on TwilioConnection {
           id
           logo
           name
+          pipes {
+            id
+            name
+          }
         }
       }
     }
@@ -175,6 +191,10 @@ query Connection($id: ID!) {
       id
       name
       logo
+      pipes {
+        id
+        name
+      }
       accounts {
         name
         category
@@ -186,6 +206,10 @@ query Connection($id: ID!) {
       id
       name
       logo
+      pipes {
+        id
+        name
+      }
       account {
         address
         kind
@@ -195,6 +219,10 @@ query Connection($id: ID!) {
       id
       name
       logo
+      pipes {
+        id
+        name
+      }
       team {
         name
       }
@@ -203,6 +231,10 @@ query Connection($id: ID!) {
       id
       name
       logo
+      pipes {
+        id
+        name
+      }
       phone {
         raw
         format

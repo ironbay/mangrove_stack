@@ -10,17 +10,18 @@ export const typeDefs = gql`
     id: ID!
     kind: String!
   }
-  type BitcoinConnection {
+  type BitcoinConnection implements Connection {
     account: BitcoinAccount!
     id: ID!
     logo: String!
     name: String!
+    pipes: [Pipe!]!
   }
-  union Connection =
-      BitcoinConnection
-    | PlaidConnection
-    | SlackConnection
-    | TwilioConnection
+  interface Connection {
+    id: ID!
+    logo: String!
+    pipes: [Pipe!]!
+  }
   input CreateTodoInput {
     id: String!
     title: String!
@@ -97,11 +98,12 @@ export const typeDefs = gql`
     name: String!
     subCategory: String!
   }
-  type PlaidConnection {
+  type PlaidConnection implements Connection {
     accounts: [PlaidAccount!]!
     id: ID!
     logo: String!
     name: String!
+    pipes: [Pipe!]!
   }
   type PlaidLink {
     link: String!
@@ -125,11 +127,12 @@ export const typeDefs = gql`
     name: String!
     topic: String!
   }
-  type SlackConnection {
+  type SlackConnection implements Connection {
     channels: [SlackChannel!]!
     id: ID!
     logo: String!
     name: String!
+    pipes: [Pipe!]!
     team: SlackTeam!
   }
   type SlackDestination {
@@ -179,11 +182,12 @@ export const typeDefs = gql`
     id: ID!
     title: String!
   }
-  type TwilioConnection {
+  type TwilioConnection implements Connection {
     id: ID!
     logo: String!
     name: String!
     phone: TwilioPhone!
+    pipes: [Pipe!]!
   }
   type TwilioDestination {
     connection: TwilioConnection!
