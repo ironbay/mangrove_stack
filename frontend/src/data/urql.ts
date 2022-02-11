@@ -1,645 +1,642 @@
-import gql from "graphql-tag";
-import * as Urql from "urql";
-export type Maybe<T> = T | null;
-export type InputMaybe<T> = Maybe<T>;
+import gql from "graphql-tag"
+import * as Urql from "urql"
+export type Maybe<T> = T | null
+export type InputMaybe<T> = Maybe<T>
 export type Exact<T extends { [key: string]: unknown }> = {
-  [K in keyof T]: T[K];
-};
+  [K in keyof T]: T[K]
+}
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]?: Maybe<T[SubKey]>;
-};
+  [SubKey in K]?: Maybe<T[SubKey]>
+}
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]: Maybe<T[SubKey]>;
-};
-export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+  [SubKey in K]: Maybe<T[SubKey]>
+}
+export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string;
-  String: string;
-  Boolean: boolean;
-  Int: number;
-  Float: number;
-};
+  ID: string
+  String: string
+  Boolean: boolean
+  Int: number
+  Float: number
+}
 
 export type BitcoinAccount = {
-  __typename?: "BitcoinAccount";
-  address: Scalars["String"];
-  connection: BitcoinConnection;
-  id: Scalars["ID"];
-  kind: Scalars["String"];
-};
+  __typename?: "BitcoinAccount"
+  address: Scalars["String"]
+  connection: BitcoinConnection
+  id: Scalars["ID"]
+  kind: Scalars["String"]
+}
 
 export type BitcoinConnection = Connection & {
-  __typename?: "BitcoinConnection";
-  account: BitcoinAccount;
-  id: Scalars["ID"];
-  logo: Scalars["String"];
-  name: Scalars["String"];
-  pipes: Array<Pipe>;
-};
+  __typename?: "BitcoinConnection"
+  account: BitcoinAccount
+  id: Scalars["ID"]
+  logo: Scalars["String"]
+  name: Scalars["String"]
+  pipes: Array<Pipe>
+}
 
 export type Connection = {
-  id: Scalars["ID"];
-  logo: Scalars["String"];
-  pipes: Array<Pipe>;
-};
+  id: Scalars["ID"]
+  logo: Scalars["String"]
+  pipes: Array<Pipe>
+}
 
 export type CreateTodoInput = {
-  id: Scalars["String"];
-  title: Scalars["String"];
-};
+  id: Scalars["String"]
+  title: Scalars["String"]
+}
 
 export type Debug = {
-  __typename?: "Debug";
-  database: Scalars["String"];
-};
+  __typename?: "Debug"
+  database: Scalars["String"]
+}
 
-export type Destination = SlackDestination | TwilioDestination;
+export type Destination = SlackDestination | TwilioDestination
 
 export type DestinationInput = {
-  slack: Array<InputMaybe<SlackDestinationInput>>;
-  twilio: Array<InputMaybe<TwilioDestinationInput>>;
-};
+  slack: Array<InputMaybe<SlackDestinationInput>>
+  twilio: Array<InputMaybe<TwilioDestinationInput>>
+}
 
 export type Filter = {
-  id: Scalars["ID"];
-  kind: Scalars["String"];
-  op: Scalars["String"];
-};
+  id: Scalars["ID"]
+  kind: Scalars["String"]
+  op: Scalars["String"]
+}
 
 export type FilterInput = {
-  number: Array<InputMaybe<NumberFilterInput>>;
-  string: Array<StringFilterInput>;
-};
+  number: Array<InputMaybe<NumberFilterInput>>
+  string: Array<StringFilterInput>
+}
 
-export type FilterUnion = NumberFilter | StringFilter;
+export type FilterUnion = NumberFilter | StringFilter
 
 export type Filters = {
-  __typename?: "Filters";
-  number: Array<NumberFilter>;
-  string: Array<StringFilter>;
-};
+  __typename?: "Filters"
+  number: Array<NumberFilter>
+  string: Array<StringFilter>
+}
 
 export type Flags = {
-  __typename?: "Flags";
-  enabled: Scalars["Boolean"];
-};
+  __typename?: "Flags"
+  enabled: Scalars["Boolean"]
+}
 
 export type FlagsInput = {
-  enabled: Scalars["Boolean"];
-};
+  enabled: Scalars["Boolean"]
+}
 
 export type Mutation = {
-  __typename?: "Mutation";
-  createPipe: Pipe;
-  createTodo: Todo;
-  removeConnection: Connection;
-  removePipe: Scalars["ID"];
-  removeTodo?: Maybe<Todo>;
-  updatePipe: Pipe;
-  upload: Scalars["String"];
-};
+  __typename?: "Mutation"
+  createPipe: Pipe
+  createTodo: Todo
+  removeConnection: Connection
+  removePipe: Scalars["ID"]
+  removeTodo?: Maybe<Todo>
+  updatePipe: Pipe
+  upload: Scalars["String"]
+}
 
 export type MutationCreatePipeArgs = {
-  input: PipeInput;
-};
+  input: PipeInput
+}
 
 export type MutationCreateTodoArgs = {
-  input: CreateTodoInput;
-};
+  input: CreateTodoInput
+}
 
 export type MutationRemoveConnectionArgs = {
-  input: Scalars["String"];
-};
+  input: Scalars["String"]
+}
 
 export type MutationRemovePipeArgs = {
-  input: Scalars["String"];
-};
+  input: Scalars["String"]
+}
 
 export type MutationRemoveTodoArgs = {
-  id: Scalars["String"];
-};
+  id: Scalars["String"]
+}
 
 export type MutationUpdatePipeArgs = {
-  input: PipeInput;
-};
+  input: PipeInput
+}
 
 export type MutationUploadArgs = {
-  name: Scalars["String"];
-  type: Scalars["String"];
-};
+  name: Scalars["String"]
+  type: Scalars["String"]
+}
 
 export type NumberFilter = Filter & {
-  __typename?: "NumberFilter";
-  id: Scalars["ID"];
-  kind: Scalars["String"];
-  op: Scalars["String"];
-  value: Scalars["Int"];
-};
+  __typename?: "NumberFilter"
+  id: Scalars["ID"]
+  kind: Scalars["String"]
+  op: Scalars["String"]
+  value: Scalars["Int"]
+}
 
 export type NumberFilterInput = {
-  id: Scalars["ID"];
-  kind: Scalars["String"];
-  op: Scalars["String"];
-  value: Scalars["Int"];
-};
+  id: Scalars["ID"]
+  kind: Scalars["String"]
+  op: Scalars["String"]
+  value: Scalars["Int"]
+}
 
 export type Pipe = {
-  __typename?: "Pipe";
-  destinations: Array<Destination>;
-  flags: Flags;
-  id: Scalars["ID"];
-  name: Scalars["String"];
-  sources: Array<Source>;
-};
+  __typename?: "Pipe"
+  destinations: Array<Destination>
+  flags: Flags
+  id: Scalars["ID"]
+  name: Scalars["String"]
+  sources: Array<Source>
+}
 
 export type PipeInput = {
-  flags: FlagsInput;
-  id: Scalars["ID"];
-  name: Scalars["String"];
-  slack_destinations: Array<SlackDestinationInput>;
-  sources: Array<SourceInput>;
-  twilio_destinations: Array<TwilioDestinationInput>;
-};
+  flags: FlagsInput
+  id: Scalars["ID"]
+  name: Scalars["String"]
+  slack_destinations: Array<SlackDestinationInput>
+  sources: Array<SourceInput>
+  twilio_destinations: Array<TwilioDestinationInput>
+}
 
 export type PlaidAccount = {
-  __typename?: "PlaidAccount";
-  category: Scalars["String"];
-  connection: PlaidConnection;
-  id: Scalars["ID"];
-  kind: Scalars["String"];
-  name: Scalars["String"];
-  subCategory: Scalars["String"];
-};
+  __typename?: "PlaidAccount"
+  category: Scalars["String"]
+  connection: PlaidConnection
+  id: Scalars["ID"]
+  kind: Scalars["String"]
+  name: Scalars["String"]
+  subCategory: Scalars["String"]
+}
 
 export type PlaidConnection = Connection & {
-  __typename?: "PlaidConnection";
-  accounts: Array<PlaidAccount>;
-  id: Scalars["ID"];
-  logo: Scalars["String"];
-  name: Scalars["String"];
-  pipes: Array<Pipe>;
-};
+  __typename?: "PlaidConnection"
+  accounts: Array<PlaidAccount>
+  id: Scalars["ID"]
+  logo: Scalars["String"]
+  name: Scalars["String"]
+  pipes: Array<Pipe>
+}
 
 export type PlaidLink = {
-  __typename?: "PlaidLink";
-  link: Scalars["String"];
-};
+  __typename?: "PlaidLink"
+  link: Scalars["String"]
+}
 
 export type Query = {
-  __typename?: "Query";
-  connection: Connection;
-  debug: Debug;
-  pipe: Pipe;
-  plaid_link: PlaidLink;
-  session: Session;
-  slack_link: SlackLink;
-  user: User;
-};
+  __typename?: "Query"
+  connection: Connection
+  debug: Debug
+  pipe: Pipe
+  plaid_link: PlaidLink
+  session: Session
+  slack_link: SlackLink
+  user: User
+}
 
 export type QueryConnectionArgs = {
-  id: Scalars["ID"];
-};
+  id: Scalars["ID"]
+}
 
 export type QueryPipeArgs = {
-  id: Scalars["ID"];
-};
+  id: Scalars["ID"]
+}
 
 export type QueryPlaid_LinkArgs = {
-  user: Scalars["ID"];
-};
+  user: Scalars["ID"]
+}
 
 export type QuerySlack_LinkArgs = {
-  user: Scalars["ID"];
-};
+  user: Scalars["ID"]
+}
 
 export type QueryUserArgs = {
-  id: Scalars["ID"];
-};
+  id: Scalars["ID"]
+}
 
 export type Session = {
-  __typename?: "Session";
-  currentUser: User;
-};
+  __typename?: "Session"
+  currentUser: User
+}
 
 export type SlackChannel = {
-  __typename?: "SlackChannel";
-  connection: SlackConnection;
-  count_members: Scalars["Int"];
-  id: Scalars["ID"];
-  name: Scalars["String"];
-  topic: Scalars["String"];
-};
+  __typename?: "SlackChannel"
+  connection: SlackConnection
+  count_members: Scalars["Int"]
+  id: Scalars["ID"]
+  name: Scalars["String"]
+  topic: Scalars["String"]
+}
 
 export type SlackConnection = Connection & {
-  __typename?: "SlackConnection";
-  channels: Array<SlackChannel>;
-  id: Scalars["ID"];
-  logo: Scalars["String"];
-  name: Scalars["String"];
-  pipes: Array<Pipe>;
-  team: SlackTeam;
-};
+  __typename?: "SlackConnection"
+  channels: Array<SlackChannel>
+  id: Scalars["ID"]
+  logo: Scalars["String"]
+  name: Scalars["String"]
+  pipes: Array<Pipe>
+  team: SlackTeam
+}
 
 export type SlackDestination = {
-  __typename?: "SlackDestination";
-  channel: SlackChannel;
-  id: Scalars["ID"];
-  team: SlackTeam;
-};
+  __typename?: "SlackDestination"
+  channel: SlackChannel
+  id: Scalars["ID"]
+  team: SlackTeam
+}
 
 export type SlackDestinationInput = {
-  channel: Scalars["String"];
-  connection: Scalars["String"];
-  id: Scalars["ID"];
-  kind: Scalars["String"];
-};
+  channel: Scalars["String"]
+  connection: Scalars["String"]
+  id: Scalars["ID"]
+  kind: Scalars["String"]
+}
 
 export type SlackLink = {
-  __typename?: "SlackLink";
-  link: Scalars["String"];
-};
+  __typename?: "SlackLink"
+  link: Scalars["String"]
+}
 
 export type SlackTeam = {
-  __typename?: "SlackTeam";
-  id: Scalars["ID"];
-  logo: Scalars["String"];
-  name: Scalars["String"];
-};
+  __typename?: "SlackTeam"
+  id: Scalars["ID"]
+  logo: Scalars["String"]
+  name: Scalars["String"]
+}
 
 export type Source = {
-  __typename?: "Source";
-  account: SourceAccount;
-  filters: Array<Maybe<FilterUnion>>;
-  id: Scalars["ID"];
-};
+  __typename?: "Source"
+  account: SourceAccount
+  filters: Array<Maybe<FilterUnion>>
+  id: Scalars["ID"]
+}
 
-export type SourceAccount = BitcoinAccount | PlaidAccount;
+export type SourceAccount = BitcoinAccount | PlaidAccount
 
 export type SourceInput = {
-  account: Scalars["String"];
-  connection: Scalars["String"];
-  filters: FilterInput;
-  id: Scalars["ID"];
-};
+  account: Scalars["String"]
+  connection: Scalars["String"]
+  filters: FilterInput
+  id: Scalars["ID"]
+}
 
 export type StringFilter = Filter & {
-  __typename?: "StringFilter";
-  id: Scalars["ID"];
-  kind: Scalars["String"];
-  op: Scalars["String"];
-  value: Scalars["String"];
-};
+  __typename?: "StringFilter"
+  id: Scalars["ID"]
+  kind: Scalars["String"]
+  op: Scalars["String"]
+  value: Scalars["String"]
+}
 
 export type StringFilterInput = {
-  id: Scalars["ID"];
-  kind: Scalars["String"];
-  op: Scalars["String"];
-  value: Scalars["String"];
-};
+  id: Scalars["ID"]
+  kind: Scalars["String"]
+  op: Scalars["String"]
+  value: Scalars["String"]
+}
 
 export type Todo = {
-  __typename?: "Todo";
-  id: Scalars["ID"];
-  title: Scalars["String"];
-};
+  __typename?: "Todo"
+  id: Scalars["ID"]
+  title: Scalars["String"]
+}
 
 export type TwilioConnection = Connection & {
-  __typename?: "TwilioConnection";
-  id: Scalars["ID"];
-  logo: Scalars["String"];
-  name: Scalars["String"];
-  phone: TwilioPhone;
-  pipes: Array<Pipe>;
-};
+  __typename?: "TwilioConnection"
+  id: Scalars["ID"]
+  logo: Scalars["String"]
+  name: Scalars["String"]
+  phone: TwilioPhone
+  pipes: Array<Pipe>
+}
 
 export type TwilioDestination = {
-  __typename?: "TwilioDestination";
-  connection: TwilioConnection;
-  id: Scalars["ID"];
-  phone: TwilioPhone;
-};
+  __typename?: "TwilioDestination"
+  connection: TwilioConnection
+  id: Scalars["ID"]
+  phone: TwilioPhone
+}
 
 export type TwilioDestinationInput = {
-  connection: Scalars["String"];
-  id: Scalars["ID"];
-  kind: Scalars["String"];
-  phone: Scalars["String"];
-};
+  connection: Scalars["String"]
+  id: Scalars["ID"]
+  kind: Scalars["String"]
+  phone: Scalars["String"]
+}
 
 export type TwilioPhone = {
-  __typename?: "TwilioPhone";
-  format: Scalars["String"];
-  raw: Scalars["String"];
-};
+  __typename?: "TwilioPhone"
+  format: Scalars["String"]
+  raw: Scalars["String"]
+}
 
 export type User = {
-  __typename?: "User";
-  connections: Array<Connection>;
-  id: Scalars["ID"];
-  pipes: Array<Pipe>;
-  todos: Array<Todo>;
-};
+  __typename?: "User"
+  connections: Array<Connection>
+  id: Scalars["ID"]
+  pipes: Array<Pipe>
+  todos: Array<Todo>
+}
 
-export type TodosQueryVariables = Exact<{ [key: string]: never }>;
+export type TodosQueryVariables = Exact<{ [key: string]: never }>
 
 export type TodosQuery = {
-  __typename?: "Query";
+  __typename?: "Query"
   session: {
-    __typename?: "Session";
+    __typename?: "Session"
     currentUser: {
-      __typename?: "User";
-      todos: Array<{ __typename?: "Todo"; id: string; title: string }>;
-    };
-  };
-};
+      __typename?: "User"
+      todos: Array<{ __typename?: "Todo"; id: string; title: string }>
+    }
+  }
+}
 
 export type RemoveTodoMutationVariables = Exact<{
-  id: Scalars["String"];
-}>;
+  id: Scalars["String"]
+}>
 
 export type RemoveTodoMutation = {
-  __typename?: "Mutation";
+  __typename?: "Mutation"
   removeTodo?:
     | { __typename?: "Todo"; id: string; title: string }
     | null
-    | undefined;
-};
+    | undefined
+}
 
 export type CreateTodoMutationVariables = Exact<{
-  id: Scalars["String"];
-  title: Scalars["String"];
-}>;
+  id: Scalars["String"]
+  title: Scalars["String"]
+}>
 
 export type CreateTodoMutation = {
-  __typename?: "Mutation";
-  createTodo: { __typename?: "Todo"; id: string; title: string };
-};
+  __typename?: "Mutation"
+  createTodo: { __typename?: "Todo"; id: string; title: string }
+}
 
 export type UploadMutationVariables = Exact<{
-  name: Scalars["String"];
-  type: Scalars["String"];
-}>;
+  name: Scalars["String"]
+  type: Scalars["String"]
+}>
 
-export type UploadMutation = { __typename?: "Mutation"; upload: string };
+export type UploadMutation = { __typename?: "Mutation"; upload: string }
 
 export type PipeQueryVariables = Exact<{
-  id: Scalars["ID"];
-}>;
+  id: Scalars["ID"]
+}>
 
 export type PipeQuery = {
-  __typename?: "Query";
+  __typename?: "Query"
   pipe: {
-    __typename?: "Pipe";
+    __typename?: "Pipe"
     sources: Array<{
-      __typename?: "Source";
-      id: string;
+      __typename?: "Source"
+      id: string
       account:
         | {
-            __typename?: "BitcoinAccount";
-            id: string;
-            address: string;
-            kind: string;
+            __typename?: "BitcoinAccount"
+            id: string
+            address: string
+            kind: string
           }
         | {
-            __typename?: "PlaidAccount";
-            id: string;
-            name: string;
-            kind: string;
-            category: string;
-            subCategory: string;
-          };
+            __typename?: "PlaidAccount"
+            id: string
+            name: string
+            kind: string
+            category: string
+            subCategory: string
+          }
       filters: Array<
         | {
-            __typename?: "NumberFilter";
-            id: string;
-            kind: string;
-            op: string;
-            num: number;
+            __typename?: "NumberFilter"
+            id: string
+            kind: string
+            op: string
+            num: number
           }
         | {
-            __typename?: "StringFilter";
-            id: string;
-            kind: string;
-            op: string;
-            text: string;
+            __typename?: "StringFilter"
+            id: string
+            kind: string
+            op: string
+            text: string
           }
         | null
         | undefined
-      >;
-    }>;
+      >
+    }>
     destinations: Array<
       | {
-          __typename?: "SlackDestination";
-          id: string;
+          __typename?: "SlackDestination"
+          id: string
           team: {
-            __typename?: "SlackTeam";
-            id: string;
-            name: string;
-            logo: string;
-          };
+            __typename?: "SlackTeam"
+            id: string
+            name: string
+            logo: string
+          }
           channel: {
-            __typename?: "SlackChannel";
-            id: string;
-            name: string;
-            topic: string;
-            count_members: number;
-          };
+            __typename?: "SlackChannel"
+            id: string
+            name: string
+            topic: string
+            count_members: number
+          }
         }
       | {
-          __typename?: "TwilioDestination";
-          id: string;
-          phone: { __typename?: "TwilioPhone"; raw: string; format: string };
+          __typename?: "TwilioDestination"
+          id: string
+          phone: { __typename?: "TwilioPhone"; raw: string; format: string }
         }
-    >;
-  };
-};
+    >
+  }
+}
 
-export type PipesQueryVariables = Exact<{ [key: string]: never }>;
+export type PipesQueryVariables = Exact<{ [key: string]: never }>
 
 export type PipesQuery = {
-  __typename?: "Query";
+  __typename?: "Query"
   session: {
-    __typename?: "Session";
+    __typename?: "Session"
     currentUser: {
-      __typename?: "User";
+      __typename?: "User"
       pipes: Array<{
-        __typename?: "Pipe";
-        id: string;
+        __typename?: "Pipe"
+        id: string
         sources: Array<{
-          __typename?: "Source";
+          __typename?: "Source"
           account:
             | {
-                __typename?: "BitcoinAccount";
-                connection: { __typename?: "BitcoinConnection"; logo: string };
+                __typename?: "BitcoinAccount"
+                connection: { __typename?: "BitcoinConnection"; logo: string }
               }
             | {
-                __typename?: "PlaidAccount";
-                connection: { __typename?: "PlaidConnection"; logo: string };
-              };
-        }>;
+                __typename?: "PlaidAccount"
+                connection: { __typename?: "PlaidConnection"; logo: string }
+              }
+        }>
         destinations: Array<
           | {
-              __typename?: "SlackDestination";
-              team: { __typename?: "SlackTeam"; logo: string };
+              __typename?: "SlackDestination"
+              team: { __typename?: "SlackTeam"; logo: string }
             }
           | { __typename?: "TwilioDestination"; id: string }
-        >;
-      }>;
-    };
-  };
-};
+        >
+      }>
+    }
+  }
+}
 
 export type UpdatePipeMutationVariables = Exact<{
-  input: PipeInput;
-}>;
+  input: PipeInput
+}>
 
 export type UpdatePipeMutation = {
-  __typename?: "Mutation";
-  updatePipe: { __typename?: "Pipe"; id: string; name: string };
-};
+  __typename?: "Mutation"
+  updatePipe: { __typename?: "Pipe"; id: string; name: string }
+}
 
 export type CreatePipeMutationVariables = Exact<{
-  input: PipeInput;
-}>;
+  input: PipeInput
+}>
 
 export type CreatePipeMutation = {
-  __typename?: "Mutation";
-  createPipe: { __typename?: "Pipe"; id: string; name: string };
-};
+  __typename?: "Mutation"
+  createPipe: { __typename?: "Pipe"; id: string; name: string }
+}
 
 export type RemovePipeMutationVariables = Exact<{
-  id: Scalars["String"];
-}>;
+  id: Scalars["String"]
+}>
 
-export type RemovePipeMutation = {
-  __typename?: "Mutation";
-  removePipe: string;
-};
+export type RemovePipeMutation = { __typename?: "Mutation"; removePipe: string }
 
-export type ConnectionsQueryVariables = Exact<{ [key: string]: never }>;
+export type ConnectionsQueryVariables = Exact<{ [key: string]: never }>
 
 export type ConnectionsQuery = {
-  __typename?: "Query";
+  __typename?: "Query"
   session: {
-    __typename?: "Session";
+    __typename?: "Session"
     currentUser: {
-      __typename?: "User";
+      __typename?: "User"
       connections: Array<
         | {
-            __typename?: "BitcoinConnection";
-            id: string;
-            logo: string;
-            name: string;
-            pipes: Array<{ __typename?: "Pipe"; id: string; name: string }>;
+            __typename?: "BitcoinConnection"
+            id: string
+            logo: string
+            name: string
+            pipes: Array<{ __typename?: "Pipe"; id: string; name: string }>
           }
         | {
-            __typename?: "PlaidConnection";
-            id: string;
-            logo: string;
-            name: string;
-            pipes: Array<{ __typename?: "Pipe"; id: string; name: string }>;
+            __typename?: "PlaidConnection"
+            id: string
+            logo: string
+            name: string
+            pipes: Array<{ __typename?: "Pipe"; id: string; name: string }>
           }
         | {
-            __typename?: "SlackConnection";
-            id: string;
-            logo: string;
-            name: string;
-            pipes: Array<{ __typename?: "Pipe"; id: string; name: string }>;
+            __typename?: "SlackConnection"
+            id: string
+            logo: string
+            name: string
+            pipes: Array<{ __typename?: "Pipe"; id: string; name: string }>
           }
         | {
-            __typename?: "TwilioConnection";
-            id: string;
-            logo: string;
-            name: string;
-            pipes: Array<{ __typename?: "Pipe"; id: string; name: string }>;
+            __typename?: "TwilioConnection"
+            id: string
+            logo: string
+            name: string
+            pipes: Array<{ __typename?: "Pipe"; id: string; name: string }>
           }
-      >;
-    };
-  };
-};
+      >
+    }
+  }
+}
 
 export type ConnectionQueryVariables = Exact<{
-  id: Scalars["ID"];
-}>;
+  id: Scalars["ID"]
+}>
 
 export type ConnectionQuery = {
-  __typename?: "Query";
+  __typename?: "Query"
   connection:
     | {
-        __typename?: "BitcoinConnection";
-        id: string;
-        name: string;
-        logo: string;
-        pipes: Array<{ __typename?: "Pipe"; id: string; name: string }>;
+        __typename?: "BitcoinConnection"
+        id: string
+        name: string
+        logo: string
+        pipes: Array<{ __typename?: "Pipe"; id: string; name: string }>
         account: {
-          __typename?: "BitcoinAccount";
-          address: string;
-          kind: string;
-        };
+          __typename?: "BitcoinAccount"
+          address: string
+          kind: string
+        }
       }
     | {
-        __typename?: "PlaidConnection";
-        id: string;
-        name: string;
-        logo: string;
-        pipes: Array<{ __typename?: "Pipe"; id: string; name: string }>;
+        __typename?: "PlaidConnection"
+        id: string
+        name: string
+        logo: string
+        pipes: Array<{ __typename?: "Pipe"; id: string; name: string }>
         accounts: Array<{
-          __typename?: "PlaidAccount";
-          name: string;
-          category: string;
-          subCategory: string;
-          kind: string;
-        }>;
+          __typename?: "PlaidAccount"
+          name: string
+          category: string
+          subCategory: string
+          kind: string
+        }>
       }
     | {
-        __typename?: "SlackConnection";
-        id: string;
-        name: string;
-        logo: string;
-        pipes: Array<{ __typename?: "Pipe"; id: string; name: string }>;
-        team: { __typename?: "SlackTeam"; name: string };
+        __typename?: "SlackConnection"
+        id: string
+        name: string
+        logo: string
+        pipes: Array<{ __typename?: "Pipe"; id: string; name: string }>
+        team: { __typename?: "SlackTeam"; name: string }
       }
     | {
-        __typename?: "TwilioConnection";
-        id: string;
-        name: string;
-        logo: string;
-        pipes: Array<{ __typename?: "Pipe"; id: string; name: string }>;
-        phone: { __typename?: "TwilioPhone"; raw: string; format: string };
-      };
-};
+        __typename?: "TwilioConnection"
+        id: string
+        name: string
+        logo: string
+        pipes: Array<{ __typename?: "Pipe"; id: string; name: string }>
+        phone: { __typename?: "TwilioPhone"; raw: string; format: string }
+      }
+}
 
 export type PlaidLinkQueryVariables = Exact<{
-  user: Scalars["ID"];
-}>;
+  user: Scalars["ID"]
+}>
 
 export type PlaidLinkQuery = {
-  __typename?: "Query";
-  plaid_link: { __typename?: "PlaidLink"; link: string };
-};
+  __typename?: "Query"
+  plaid_link: { __typename?: "PlaidLink"; link: string }
+}
 
 export type SlackLinkQueryVariables = Exact<{
-  user: Scalars["ID"];
-}>;
+  user: Scalars["ID"]
+}>
 
 export type SlackLinkQuery = {
-  __typename?: "Query";
-  plaid_link: { __typename?: "PlaidLink"; link: string };
-};
+  __typename?: "Query"
+  plaid_link: { __typename?: "PlaidLink"; link: string }
+}
 
 export type RemoveConnectionMutationVariables = Exact<{
-  id: Scalars["String"];
-}>;
+  id: Scalars["String"]
+}>
 
 export type RemoveConnectionMutation = {
-  __typename?: "Mutation";
+  __typename?: "Mutation"
   removeConnection:
     | { __typename?: "BitcoinConnection"; id: string; name: string }
     | { __typename?: "PlaidConnection"; id: string; name: string }
     | { __typename?: "SlackConnection"; id: string; name: string }
-    | { __typename?: "TwilioConnection"; id: string; name: string };
-};
+    | { __typename?: "TwilioConnection"; id: string; name: string }
+}
 
 export const TodosDocument = gql`
   query Todos {
@@ -652,12 +649,12 @@ export const TodosDocument = gql`
       }
     }
   }
-`;
+`
 
 export function useTodosQuery(
   options: Omit<Urql.UseQueryArgs<TodosQueryVariables>, "query"> = {}
 ) {
-  return Urql.useQuery<TodosQuery>({ query: TodosDocument, ...options });
+  return Urql.useQuery<TodosQuery>({ query: TodosDocument, ...options })
 }
 export const RemoveTodoDocument = gql`
   mutation RemoveTodo($id: String!) {
@@ -666,12 +663,12 @@ export const RemoveTodoDocument = gql`
       title
     }
   }
-`;
+`
 
 export function useRemoveTodoMutation() {
   return Urql.useMutation<RemoveTodoMutation, RemoveTodoMutationVariables>(
     RemoveTodoDocument
-  );
+  )
 }
 export const CreateTodoDocument = gql`
   mutation CreateTodo($id: String!, $title: String!) {
@@ -680,23 +677,23 @@ export const CreateTodoDocument = gql`
       title
     }
   }
-`;
+`
 
 export function useCreateTodoMutation() {
   return Urql.useMutation<CreateTodoMutation, CreateTodoMutationVariables>(
     CreateTodoDocument
-  );
+  )
 }
 export const UploadDocument = gql`
   mutation Upload($name: String!, $type: String!) {
     upload(name: $name, type: $type)
   }
-`;
+`
 
 export function useUploadMutation() {
   return Urql.useMutation<UploadMutation, UploadMutationVariables>(
     UploadDocument
-  );
+  )
 }
 export const PipeDocument = gql`
   query Pipe($id: ID!) {
@@ -757,12 +754,12 @@ export const PipeDocument = gql`
       }
     }
   }
-`;
+`
 
 export function usePipeQuery(
   options: Omit<Urql.UseQueryArgs<PipeQueryVariables>, "query"> = {}
 ) {
-  return Urql.useQuery<PipeQuery>({ query: PipeDocument, ...options });
+  return Urql.useQuery<PipeQuery>({ query: PipeDocument, ...options })
 }
 export const PipesDocument = gql`
   query Pipes {
@@ -798,12 +795,12 @@ export const PipesDocument = gql`
       }
     }
   }
-`;
+`
 
 export function usePipesQuery(
   options: Omit<Urql.UseQueryArgs<PipesQueryVariables>, "query"> = {}
 ) {
-  return Urql.useQuery<PipesQuery>({ query: PipesDocument, ...options });
+  return Urql.useQuery<PipesQuery>({ query: PipesDocument, ...options })
 }
 export const UpdatePipeDocument = gql`
   mutation UpdatePipe($input: PipeInput!) {
@@ -812,12 +809,12 @@ export const UpdatePipeDocument = gql`
       name
     }
   }
-`;
+`
 
 export function useUpdatePipeMutation() {
   return Urql.useMutation<UpdatePipeMutation, UpdatePipeMutationVariables>(
     UpdatePipeDocument
-  );
+  )
 }
 export const CreatePipeDocument = gql`
   mutation CreatePipe($input: PipeInput!) {
@@ -826,23 +823,23 @@ export const CreatePipeDocument = gql`
       name
     }
   }
-`;
+`
 
 export function useCreatePipeMutation() {
   return Urql.useMutation<CreatePipeMutation, CreatePipeMutationVariables>(
     CreatePipeDocument
-  );
+  )
 }
 export const RemovePipeDocument = gql`
   mutation RemovePipe($id: String!) {
     removePipe(input: $id)
   }
-`;
+`
 
 export function useRemovePipeMutation() {
   return Urql.useMutation<RemovePipeMutation, RemovePipeMutationVariables>(
     RemovePipeDocument
-  );
+  )
 }
 export const ConnectionsDocument = gql`
   query Connections {
@@ -889,7 +886,7 @@ export const ConnectionsDocument = gql`
       }
     }
   }
-`;
+`
 
 export function useConnectionsQuery(
   options: Omit<Urql.UseQueryArgs<ConnectionsQueryVariables>, "query"> = {}
@@ -897,7 +894,7 @@ export function useConnectionsQuery(
   return Urql.useQuery<ConnectionsQuery>({
     query: ConnectionsDocument,
     ...options,
-  });
+  })
 }
 export const ConnectionDocument = gql`
   query Connection($id: ID!) {
@@ -957,7 +954,7 @@ export const ConnectionDocument = gql`
       }
     }
   }
-`;
+`
 
 export function useConnectionQuery(
   options: Omit<Urql.UseQueryArgs<ConnectionQueryVariables>, "query"> = {}
@@ -965,7 +962,7 @@ export function useConnectionQuery(
   return Urql.useQuery<ConnectionQuery>({
     query: ConnectionDocument,
     ...options,
-  });
+  })
 }
 export const PlaidLinkDocument = gql`
   query PlaidLink($user: ID!) {
@@ -973,15 +970,12 @@ export const PlaidLinkDocument = gql`
       link
     }
   }
-`;
+`
 
 export function usePlaidLinkQuery(
   options: Omit<Urql.UseQueryArgs<PlaidLinkQueryVariables>, "query"> = {}
 ) {
-  return Urql.useQuery<PlaidLinkQuery>({
-    query: PlaidLinkDocument,
-    ...options,
-  });
+  return Urql.useQuery<PlaidLinkQuery>({ query: PlaidLinkDocument, ...options })
 }
 export const SlackLinkDocument = gql`
   query SlackLink($user: ID!) {
@@ -989,15 +983,12 @@ export const SlackLinkDocument = gql`
       link
     }
   }
-`;
+`
 
 export function useSlackLinkQuery(
   options: Omit<Urql.UseQueryArgs<SlackLinkQueryVariables>, "query"> = {}
 ) {
-  return Urql.useQuery<SlackLinkQuery>({
-    query: SlackLinkDocument,
-    ...options,
-  });
+  return Urql.useQuery<SlackLinkQuery>({ query: SlackLinkDocument, ...options })
 }
 export const RemoveConnectionDocument = gql`
   mutation RemoveConnection($id: String!) {
@@ -1020,11 +1011,11 @@ export const RemoveConnectionDocument = gql`
       }
     }
   }
-`;
+`
 
 export function useRemoveConnectionMutation() {
   return Urql.useMutation<
     RemoveConnectionMutation,
     RemoveConnectionMutationVariables
-  >(RemoveConnectionDocument);
+  >(RemoveConnectionDocument)
 }
