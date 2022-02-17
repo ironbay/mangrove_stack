@@ -47,7 +47,7 @@ export const Schema = {
       pk: { type: String, value: "user#${user_id}" },
       sk: {
         type: String,
-        value: "pipe#${pipe_id}#source#${source_id}#filter#${filter}",
+        value: "pipe#${pipe_id}#source#${source_id}#filter#${id}",
       },
       user_id: { type: String },
       pipe_id: { type: String },
