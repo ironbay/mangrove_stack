@@ -22,7 +22,6 @@ export class Auth extends sst.Stack {
         },
       },
     });
-
     this.outputs = {
       userPool: auth.cognitoUserPool!,
     };
